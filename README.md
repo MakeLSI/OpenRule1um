@@ -1,8 +1,6 @@
 OpenRule1um
 =====
 
-OpenRule1um
-
 ## これは何
 
 * NDA（秘密保持契約）が不要の1um設計ルール(3層メタル)と、それに関連するファイルです。
@@ -17,6 +15,8 @@ OpenRule1um
 ** CELL_psubcont : PsubとML1とのコンタクト
 ** CELL_via1 : ML1とML2のビア
 ** CELL_via2 : ML2とML3のビア
+
+* Glade用の↑のセルは、ディレクトリOpenRule1umの中にあります。Gladeでライブラリとしてこのディレクトリを開くことで使用できます。
 
 ## 設計ルール
 
