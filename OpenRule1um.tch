@@ -17,12 +17,12 @@ LAYER	TEXT	drawing		13	0	(255,255,255,255)	t	t	empty	custom4 ;
 LAYER	FRAME	drawing		14	0	(255,255,255,255)	t	t	empty	custom4 ;
 LAYER	RES	drawing		15	0	(255,255,255,255)	t	t	empty	custom4 ;
 LAYER	CAP	drawing		16	0	(255,255,255,255)	t	t	empty	custom4 ;
-LAYER	DM_dcn	drawing		101	0	(100,100,100,255)	t	t	dagger	custom3 ;
-LAYER	DM_pcn	drawing		102	0	(100,100,100,255)	t	t	dagger	custom3 ;
-LAYER	DM_nscn	drawing		103	0	(100,100,100,255)	t	t	dagger	custom3 ;
-LAYER	DM_pscn	drawing		104	0	(100,100,100,255)	t	t	dagger	custom3 ;
-LAYER	DM_via1	drawing		105	0	(100,100,100,255)	t	t	dagger	custom3 ;
-LAYER	DM_via2	drawing		106	0	(100,100,100,255)	t	t	dagger	custom3 ;
+LAYER	DM_dcn	drawing		101	0	(150,200,255,255)	t	t	dagger	custom3 ;
+LAYER	DM_pcn	drawing		102	0	(255,170,255,255)	t	t	dagger	custom3 ;
+LAYER	DM_nscn	drawing		103	0	(0,255,255,255)	t	t	dagger	custom3 ;
+LAYER	DM_pscn	drawing		104	0	(0,170,255,255)	t	t	dagger	custom3 ;
+LAYER	DM_via1	drawing		105	0	(104,140,170,255)	t	t	dagger	custom3 ;
+LAYER	DM_via2	drawing		106	0	(204,204,255,255)	t	t	dagger	custom3 ;
 //
 // Layer height / thickness.
 //
