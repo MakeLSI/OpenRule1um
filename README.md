@@ -1,6 +1,8 @@
 OpenRule1um
 =====
 
+※v1.10となってレイヤの使い方、番号が一部変わりました。
+
 ## これは何
 
 * NDA（秘密保持契約）が不要の1um設計ルール(3層メタル)と、それに関連するファイルです。
@@ -16,14 +18,14 @@ OpenRule1um
 ** CELL_via1 : ML1とML2のビア
 ** CELL_via2 : ML2とML3のビア
 
-* Glade用の↑のセルは、ディレクトリOpenRule1umの中にあります。Gladeでライブラリとしてこのディレクトリを開くことで使用できます。
+* Glade用の↑のセルは、ディレクトリOpenRule1um_v110の中にあります。Gladeでライブラリとしてこのディレクトリを開くことで使用できます。また参考としてインバータのレイアウト例もつくってあります。
 
 ## 設計ルール
 
-* OpenRule1um.tch : Glade用のテクノロジファイル
-* OpenRule1um-drc.py : Glade用のDRCルールファイル
-* OpenRule1um_summary.pdf : 設計ルールの要約
-* OpenRule1um.xlsx : 設計ルールとレイヤ定義 (A.LSI山田様作のものをベース）
+* OpenRule1um_v110.tch : Glade用のテクノロジファイル
+* OpenRule1um-drc_v110.py : Glade用のDRCルールファイル
+* OpenRule1um_summary_v110.pdf : 設計ルールの要約
+* OpenRule1um_v110.xlsx : 設計ルールとレイヤ定義 (A.LSI山田様作のものをベース）
 
 ## 近未来的ToDo
 
