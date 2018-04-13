@@ -44,14 +44,13 @@ print "# Form derived layers"
 #PSUB = geomNot(NWL); # psub
 bkgnd     = geomBkgnd()
 PSUB      = geomAndNot(bkgnd, NWL)
-Ndiff = geomAnd(DIFF, Narea);
-Pdiff = geomAnd(DIFF, Parea);
-#NMOS = geomAnd(Ndiff, POL); # nMOS channel
-#PMOS = geomAnd(Pdiff, POL); # pMOS channel
+
 GATE = geomAnd(POL, DIFF);
+Dif = geomAndNot(DIFF, GATE)
+Ndiff = geomAnd(Dif, Narea);
+Pdiff = geomAnd(Dif, Parea);
 NMOS = geomAnd(GATE, Narea); # nMOS channel
 PMOS = geomAnd(GATE, Parea); # pMOS channel
-MOS = geomOr(NMOS, PMOS);
 
 print "# Label nodes"
 # This must be done BEFORE geomConnect.
@@ -97,6 +96,8 @@ saveInterconnect([
     		[Ndiff, "DIFF"],
 		[Pdiff, "DIFF"],
 		[POL, "POL"],
+#    GATE,
+#    Dif,
 		ML1,
 		ML2,
 		ML3
