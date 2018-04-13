@@ -51,6 +51,8 @@ Ndiff = geomAnd(Dif, Narea);
 Pdiff = geomAnd(Dif, Parea);
 NMOS = geomAnd(GATE, Narea); # nMOS channel
 PMOS = geomAnd(GATE, Parea); # pMOS channel
+ntap = geomAnd(Ndiff, NWL)
+ptap  = geomAnd(Pdiff, PSUB)
 
 print "# Label nodes"
 # This must be done BEFORE geomConnect.
@@ -77,7 +79,9 @@ geomConnect( [
         [DM_nscn, NWL_dp, ML1],
         [DM_pscn, PSUB, ML1],
         [DM_via1, ML1, ML2],
-        [DM_via2, ML2, ML3]
+        [DM_via2, ML2, ML3],
+        [ptap, Pdiff, PSUB],
+        [ntap, Ndiff, NWL]
 	     ] )
              
 # Save connectivity to extracted view. Saved layers must be
@@ -85,7 +89,6 @@ geomConnect( [
 # layers must be saved to a named layer (e.g. psub below)
 print "# Save interconnect"
 saveInterconnect([
-#                PSUB,
 		NWL,
 		DM_dcn,
 		DM_pcn,
@@ -96,8 +99,6 @@ saveInterconnect([
     		[Ndiff, "DIFF"],
 		[Pdiff, "DIFF"],
 		[POL, "POL"],
-#    GATE,
-#    Dif,
 		ML1,
 		ML2,
 		ML3
