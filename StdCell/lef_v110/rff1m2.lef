@@ -1,0 +1,332 @@
+VERSION 5.5 ;
+NAMESCASESENSITIVE ON ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+
+MACRO rff1m2
+  CLASS CORE ;
+  SOURCE USER ;
+  ORIGIN 0 0 ;
+  SIZE 56.000 BY 30.000 ;
+  SYMMETRY X Y ;
+  SITE unit ;
+ 
+  PIN CK
+    USE SIGNAL ;
+    PORT
+      LAYER ML2 ;
+        POLYGON 3.500 9.000  3.500 11.000  5.500 11.000  5.500 9.000  3.500 
+        9.000  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 3.500 9.000  3.500 11.000  5.500 11.000  5.500 9.000  3.500 
+        9.000  ;
+    END
+  END CK
+  PIN D
+    USE SIGNAL ;
+    PORT
+      LAYER ML2 ;
+        POLYGON 11.000 9.000  11.000 11.000  13.000 11.000  13.000 9.000  
+        11.000 9.000  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 11.000 9.000  11.000 11.000  13.000 11.000  13.000 9.000  
+        11.000 9.000  ;
+    END
+  END D
+  PIN Q
+    USE SIGNAL ;
+    PORT
+      LAYER ML1 ;
+        WIDTH 1.000  ;
+        PATH 54.800 3.300 54.800 26.000  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 53.500 10.500  53.500 12.500  55.500 12.500  55.500 10.500  
+        53.500 10.500  ;
+    END
+    PORT
+      LAYER ML2 ;
+        POLYGON 53.500 10.500  53.500 12.500  55.500 12.500  55.500 10.500  
+        53.500 10.500  ;
+    END
+  END Q
+  PIN R
+    USE SIGNAL ;
+    PORT
+      LAYER ML2 ;
+        POLYGON 43.000 10.500  43.000 12.500  45.000 12.500  45.000 10.500  
+        43.000 10.500  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 43.000 10.500  43.000 12.500  45.000 12.500  45.000 10.500  
+        43.000 10.500  ;
+    END
+  END R
+  PIN VDD
+    USE POWER ;
+    PORT
+      LAYER ML1 ;
+        RECT -0.500 28.500  56.500 30.500  ;
+    END
+  END VDD
+  PIN VSS
+    USE GROUND ;
+    PORT
+      LAYER ML1 ;
+        RECT -0.500 -0.500  56.500 1.500  ;
+    END
+  END VSS
+  OBS
+
+    LAYER ML1 ;
+      WIDTH 1.000  ;
+      PATH 1.800 26.000 1.800 3.600  ;
+      WIDTH 1.400  ;
+      PATH 1.800 22.600 1.800 25.800  ;
+      WIDTH 1.000  ;
+      PATH 5.400 13.000 1.800 13.000  ;
+      WIDTH 1.000  ;
+      PATH 5.900 18.800 1.800 18.800  ;
+      WIDTH 1.000  ;
+      PATH 5.900 6.800 1.800 6.800  ;
+      POLYGON 3.500 9.000  3.500 11.000  5.500 11.000  5.500 9.000  3.500 
+      9.000  ;
+      WIDTH 1.400  ;
+      PATH 4.800 22.600 4.800 28.500  ;
+      WIDTH 1.400  ;
+      PATH 4.800 1.000 4.800 3.800  ;
+      WIDTH 1.000  ;
+      PATH 8.300 3.600 8.300 9.500 7.800 9.500 7.800 16.200 8.300 16.200 8.300 
+      26.000  ;
+      WIDTH 1.400  ;
+      PATH 11.300 1.000 11.300 3.800  ;
+      WIDTH 1.400  ;
+      PATH 11.300 22.600 11.300 28.500  ;
+      WIDTH 1.000  ;
+      PATH 14.800 6.800 8.300 6.800  ;
+
+      WIDTH 1.400  ;
+      PATH 16.300 22.600 16.300 25.800  ;
+      WIDTH 1.000  ;
+      PATH 16.300 22.600 16.300 18.800 22.300 18.800  ;
+      WIDTH 1.000  ;
+      PATH 16.300 3.800 16.300 4.300 16.800 4.300 16.800 10.000 22.400 10.000 
+       ;
+      WIDTH 1.000  ;
+      PATH 8.300 16.200 33.300 16.200  ;
+      WIDTH 1.400  ;
+      PATH 21.300 22.600 21.300 28.500  ;
+      WIDTH 1.400  ;
+      PATH 21.300 1.000 21.300 3.800  ;
+      WIDTH 1.000  ;
+      PATH 35.800 13.000 10.300 13.000  ;
+      WIDTH 1.000  ;
+      PATH 28.300 6.800 19.900 6.800  ;
+      WIDTH 1.000  ;
+      PATH 24.300 3.800 24.300 6.800  ;
+      WIDTH 1.400  ;
+      PATH 26.300 22.600 26.300 25.800  ;
+      WIDTH 1.400  ;
+      PATH 27.300 1.000 27.300 3.800  ;
+      WIDTH 1.000  ;
+      PATH 26.300 22.600 26.300 19.200 28.300 19.200  ;
+
+      WIDTH 1.400  ;
+      PATH 29.800 22.600 29.800 28.500  ;
+      WIDTH 1.000  ;
+      PATH 25.400 10.200 43.800 10.200  ;
+      WIDTH 1.400  ;
+      PATH 34.800 22.600 34.800 25.800  ;
+      WIDTH 1.000  ;
+      PATH 32.300 3.800 32.300 6.800 37.800 6.800  ;
+      WIDTH 1.400  ;
+      PATH 37.300 1.000 37.300 3.800  ;
+      WIDTH 1.000  ;
+      PATH 34.800 22.600 34.800 19.200 41.000 19.200  ;
+      WIDTH 1.400  ;
+      PATH 39.800 22.600 39.800 28.500  ;
+      WIDTH 1.000  ;
+      PATH 38.500 14.000 44.900 14.000  ;
+      WIDTH 1.400  ;
+      PATH 43.200 1.000 43.200 3.800  ;
+
+      WIDTH 1.000  ;
+      PATH 40.800 3.800 40.800 6.300 46.300 6.300 46.300 8.700 49.300 8.700 
+      49.300 14.000 44.900 14.000 44.900 21.500  ;
+      WIDTH 1.400  ;
+      PATH 44.800 22.600 44.800 25.800  ;
+      WIDTH 1.000  ;
+      PATH 49.300 17.200 44.900 17.200  ;
+      WIDTH 1.400  ;
+      PATH 48.300 22.600 48.300 25.800  ;
+      WIDTH 1.000  ;
+      PATH 48.200 26.000 48.200 19.400 52.000 19.400 52.000 6.300 48.300 6.300 
+      48.300 3.600  ;
+      WIDTH 1.400  ;
+      PATH 51.300 1.000 51.300 3.800  ;
+      WIDTH 1.400  ;
+      PATH 51.300 22.600 51.300 28.500  ;
+
+      WIDTH 1.400  ;
+      PATH 54.300 22.600 54.300 25.800  ;
+
+      WIDTH 1.000  ;
+      PATH 54.800 3.300 54.800 26.000  ;
+    LAYER ML2 ;
+      WIDTH 1.000  ;
+      PATH 22.300 10.000 22.300 18.700  ;
+      WIDTH 1.000  ;
+      PATH 28.300 18.600 28.300 6.800  ;
+      WIDTH 1.000  ;
+      PATH 40.800 18.600 40.800 16.000 38.300 16.000 38.300 6.800  ;
+
+    VIA 1.800 23.800  dcont ;
+    VIA 1.800 21.800  dcont ;
+    VIA 1.800 3.800  dcont ;
+    VIA 1.800 25.800  dcont ;
+    VIA 4.800 23.800  dcont ;
+    VIA 4.800 21.800  dcont ;
+    VIA 4.800 25.800  dcont ;
+    VIA 4.800 3.800  dcont ;
+    VIA 7.800 25.800  dcont ;
+    VIA 7.800 23.800  dcont ;
+    VIA 7.800 21.800  dcont ;
+    VIA 7.800 3.800  dcont ;
+    VIA 11.300 21.800  dcont ;
+    VIA 11.300 23.800  dcont ;
+    VIA 11.300 25.800  dcont ;
+    VIA 11.300 3.800  dcont ;
+    VIA 16.300 21.800  dcont ;
+    VIA 16.300 25.800  dcont ;
+    VIA 16.300 23.800  dcont ;
+    VIA 16.300 3.800  dcont ;
+    VIA 21.300 21.800  dcont ;
+    VIA 21.300 23.800  dcont ;
+    VIA 21.300 25.800  dcont ;
+    VIA 21.300 3.800  dcont ;
+    VIA 24.300 3.800  dcont ;
+    VIA 26.300 21.800  dcont ;
+    VIA 26.300 23.800  dcont ;
+    VIA 26.300 25.800  dcont ;
+    VIA 27.300 3.800  dcont ;
+    VIA 29.800 21.800  dcont ;
+    VIA 29.800 25.800  dcont ;
+    VIA 29.800 23.800  dcont ;
+    VIA 32.300 3.800  dcont ;
+    VIA 34.800 21.800  dcont ;
+    VIA 34.800 23.800  dcont ;
+    VIA 34.800 25.800  dcont ;
+    VIA 37.300 3.800  dcont ;
+    VIA 39.800 21.800  dcont ;
+    VIA 39.800 23.800  dcont ;
+    VIA 39.800 25.800  dcont ;
+    VIA 40.300 3.800  dcont ;
+    VIA 43.200 3.800  dcont ;
+    VIA 44.800 21.800  dcont ;
+    VIA 44.800 23.800  dcont ;
+    VIA 44.800 25.800  dcont ;
+    VIA 48.300 3.800  dcont ;
+    VIA 48.300 21.800  dcont ;
+    VIA 48.300 23.800  dcont ;
+    VIA 48.300 25.800  dcont ;
+    VIA 51.300 3.800  dcont ;
+    VIA 51.300 21.800  dcont ;
+    VIA 51.300 23.800  dcont ;
+    VIA 51.300 25.800  dcont ;
+    VIA 54.300 3.800  dcont ;
+    VIA 54.300 21.800  dcont ;
+    VIA 54.300 23.800  dcont ;
+    VIA 54.300 25.800  dcont ;
+    VIA 50.000 29.500  nsubcont ;
+    VIA 27.700 29.500  nsubcont ;
+    VIA 10.200 29.500  nsubcont ;
+    VIA 4.500 10.000  pcont ;
+    VIA 5.300 13.000  pcont ;
+    VIA 5.800 18.800  pcont ;
+    VIA 5.800 6.800  pcont ;
+    VIA 10.300 13.000  pcont ;
+    VIA 12.000 10.000  pcont ;
+    VIA 14.800 6.800  pcont ;
+    VIA 15.300 13.000  pcont ;
+    VIA 17.300 16.000  pcont ;
+    VIA 20.300 6.800  pcont ;
+    VIA 22.300 18.700  pcont ;
+    VIA 22.300 10.000  pcont ;
+    VIA 25.300 10.000  pcont ;
+    VIA 28.300 6.800  pcont ;
+    VIA 28.300 18.700  pcont ;
+    VIA 30.300 13.000  pcont ;
+    VIA 33.300 16.700  pcont ;
+    VIA 35.300 13.700  pcont ;
+    VIA 38.300 6.800  pcont ;
+    VIA 38.300 14.000  pcont ;
+    VIA 40.800 18.700  pcont ;
+    VIA 44.000 11.500  pcont ;
+    VIA 49.300 8.700  pcont ;
+    VIA 49.300 17.200  pcont ;
+    VIA 52.300 6.800  pcont ;
+    VIA 52.300 18.900  pcont ;
+    VIA 50.000 0.500  psubcont ;
+    VIA 27.700 0.500  psubcont ;
+    VIA 10.200 0.500  psubcont ;
+    VIA 22.300 18.700  Via ;
+    VIA 22.300 10.000  Via ;
+    VIA 28.300 18.700  Via ;
+    VIA 28.300 6.800  Via ;
+    VIA 38.300 6.800  Via ;
+    VIA 40.800 18.700  Via ;
+  END
+END rff1m2
+
+MACRO dcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END dcont
+
+MACRO nsubcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END nsubcont
+
+MACRO pcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END pcont
+
+MACRO psubcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END psubcont
+
+MACRO Via
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      POLYGON -1.000 -1.000  -1.000 1.000  1.000 1.000  1.000 -1.000  -1.000 
+      -1.000  ;
+    LAYER ML2 ;
+      POLYGON -1.000 -1.000  -1.000 1.000  1.000 1.000  1.000 -1.000  -1.000 
+      -1.000  ;
+  END
+END Via
+
+
+END LIBRARY

@@ -1,0 +1,183 @@
+VERSION 5.5 ;
+NAMESCASESENSITIVE ON ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+
+MACRO exnr
+  CLASS CORE ;
+  SOURCE USER ;
+  ORIGIN 0 0 ;
+  SIZE 21.000 BY 30.000 ;
+  SYMMETRY X Y ;
+  SITE unit ;
+ 
+  PIN A
+    USE SIGNAL ;
+    PORT
+      LAYER ML1 ;
+        WIDTH 1.000  ;
+        PATH 7.000 14.700 14.800 14.700  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 6.000 13.700  6.000 15.700  8.000 15.700  8.000 13.700  6.000 
+        13.700  ;
+    END
+    PORT
+      LAYER ML2 ;
+        POLYGON 6.000 13.700  6.000 15.700  8.000 15.700  8.000 13.700  6.000 
+        13.700  ;
+    END
+  END A
+  PIN B
+    USE SIGNAL ;
+    PORT
+      LAYER ML2 ;
+        POLYGON 3.000 10.700  3.000 12.700  5.000 12.700  5.000 10.700  3.000 
+        10.700  ;
+    END
+    PORT
+      LAYER ML1 ;
+        WIDTH 1.000  ;
+        PATH 4.000 11.700 11.300 11.700  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 3.000 10.700  3.000 12.700  5.000 12.700  5.000 10.700  3.000 
+        10.700  ;
+    END
+  END B
+  PIN VDD
+    USE POWER ;
+    PORT
+      LAYER ML1 ;
+        RECT -0.500 28.500  21.500 30.500  ;
+    END
+  END VDD
+  PIN VSS
+    USE GROUND ;
+    PORT
+      LAYER ML1 ;
+        RECT -0.500 -0.500  21.500 1.500  ;
+    END
+  END VSS
+  PIN YB
+    USE SIGNAL ;
+    PORT
+      LAYER ML1 ;
+        WIDTH 1.000  ;
+        PATH 16.300 21.800 16.300 17.500 19.800 17.500 19.800 6.200 19.300 
+        6.200 19.300 3.800  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 18.500 12.500  18.500 14.500  20.500 14.500  20.500 12.500  
+        18.500 12.500  ;
+    END
+    PORT
+      LAYER ML2 ;
+        POLYGON 18.500 12.500  18.500 14.500  20.500 14.500  20.500 12.500  
+        18.500 12.500  ;
+    END
+  END YB
+  OBS
+
+    LAYER ML1 ;
+      WIDTH 1.400  ;
+      PATH 1.800 22.600 1.800 28.500  ;
+      WIDTH 1.000  ;
+      PATH 4.800 25.800 4.800 19.000 1.500 19.000 1.500 8.700 1.800 8.700 
+      1.800 3.800  ;
+      WIDTH 1.000  ;
+      PATH 6.800 1.000 6.800 3.800  ;
+      WIDTH 1.000  ;
+      PATH 4.000 11.700 11.300 11.700  ;
+      WIDTH 1.400  ;
+      PATH 7.800 22.600 7.800 28.500  ;
+      WIDTH 1.000  ;
+      PATH 1.500 8.700 16.800 8.700  ;
+
+      WIDTH 1.000  ;
+      PATH 7.000 14.700 14.800 14.700  ;
+      WIDTH 1.400  ;
+      PATH 11.300 22.600 11.300 28.500  ;
+      WIDTH 1.000  ;
+      PATH 13.300 1.000 13.300 3.800  ;
+      WIDTH 1.000  ;
+      PATH 16.300 3.800 16.300 6.200 10.300 6.200 10.300 3.800  ;
+      WIDTH 1.400  ;
+      PATH 16.300 25.800 16.300 21.800  ;
+      WIDTH 1.000  ;
+      PATH 16.300 21.800 16.300 17.500 19.800 17.500 19.800 6.200 19.300 6.200 
+      19.300 3.800  ;
+      WIDTH 1.400  ;
+      PATH 19.300 22.600 19.300 28.500  ;
+
+    VIA 1.800 23.800  dcont ;
+    VIA 1.800 21.800  dcont ;
+    VIA 1.800 3.800  dcont ;
+    VIA 1.800 25.800  dcont ;
+    VIA 4.800 25.800  dcont ;
+    VIA 4.800 23.800  dcont ;
+    VIA 4.800 21.800  dcont ;
+    VIA 6.800 3.800  dcont ;
+    VIA 7.800 23.800  dcont ;
+    VIA 7.800 21.800  dcont ;
+    VIA 7.800 25.800  dcont ;
+    VIA 10.300 3.800  dcont ;
+    VIA 11.300 21.800  dcont ;
+    VIA 11.300 23.800  dcont ;
+    VIA 11.300 25.800  dcont ;
+    VIA 13.300 3.800  dcont ;
+    VIA 16.300 21.800  dcont ;
+    VIA 16.300 25.800  dcont ;
+    VIA 16.300 23.800  dcont ;
+    VIA 16.300 3.800  dcont ;
+    VIA 19.300 23.800  dcont ;
+    VIA 19.300 21.800  dcont ;
+    VIA 19.300 25.800  dcont ;
+    VIA 19.300 3.800  dcont ;
+    VIA 7.000 14.700  pcont ;
+    VIA 10.200 29.500  nsubcont ;
+    VIA 17.300 8.700  pcont ;
+    VIA 14.300 14.700  pcont ;
+    VIA 4.000 11.700  pcont ;
+    VIA 11.300 11.700  pcont ;
+    VIA 10.200 0.500  psubcont ;
+  END
+END exnr
+
+MACRO dcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END dcont
+
+MACRO pcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END pcont
+
+MACRO nsubcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END nsubcont
+
+MACRO psubcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END psubcont
+
+
+END LIBRARY

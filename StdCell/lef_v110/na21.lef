@@ -1,0 +1,141 @@
+VERSION 5.5 ;
+NAMESCASESENSITIVE ON ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+
+MACRO na21
+  CLASS CORE ;
+  SOURCE USER ;
+  ORIGIN 0 0 ;
+  SIZE 9.500 BY 30.000 ;
+  SYMMETRY X Y ;
+  SITE unit ;
+ 
+  PIN A
+    USE SIGNAL ;
+    PORT
+      LAYER ML2 ;
+        POLYGON 1.000 14.500  1.000 16.500  3.000 16.500  3.000 14.500  1.000 
+        14.500  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 1.000 14.500  1.000 16.500  3.000 16.500  3.000 14.500  1.000 
+        14.500  ;
+    END
+  END A
+  PIN B
+    USE SIGNAL ;
+    PORT
+      LAYER ML2 ;
+        POLYGON 4.000 8.500  4.000 10.500  6.000 10.500  6.000 8.500  4.000 
+        8.500  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 4.000 8.500  4.000 10.500  6.000 10.500  6.000 8.500  4.000 
+        8.500  ;
+    END
+  END B
+  PIN VDD
+    USE POWER ;
+    PORT
+      LAYER ML1 ;
+        RECT -0.500 28.500  10.000 30.500  ;
+    END
+  END VDD
+  PIN VSS
+    USE GROUND ;
+    PORT
+      LAYER ML1 ;
+        RECT -0.500 -0.500  10.000 1.500  ;
+    END
+  END VSS
+  PIN YB
+    USE SIGNAL ;
+    PORT
+      LAYER ML1 ;
+        WIDTH 1.000  ;
+        PATH 4.800 20.500 4.800 18.000 7.500 18.000 7.500 6.500 6.800 6.500 
+        6.800 3.800  ;
+    END
+    PORT
+      LAYER ML1 ;
+        POLYGON 7.000 13.000  7.000 15.000  9.000 15.000  9.000 13.000  7.000 
+        13.000  ;
+    END
+    PORT
+      LAYER ML2 ;
+        POLYGON 7.000 13.000  7.000 15.000  9.000 15.000  9.000 13.000  7.000 
+        13.000  ;
+    END
+  END YB
+  OBS
+
+    LAYER ML1 ;
+
+      WIDTH 1.400  ;
+      PATH 1.800 21.300 1.800 28.500  ;
+      WIDTH 1.000  ;
+      PATH 1.800 1.000 1.800 3.800  ;
+      WIDTH 1.400  ;
+      PATH 7.800 21.300 7.800 28.500  ;
+
+      WIDTH 1.400  ;
+      PATH 4.800 21.300 4.800 24.500  ;
+      WIDTH 1.000  ;
+      PATH 4.800 20.500 4.800 18.000 7.500 18.000 7.500 6.500 6.800 6.500 
+      6.800 3.800  ;
+
+    VIA 1.800 22.500  dcont ;
+    VIA 1.800 20.500  dcont ;
+    VIA 1.800 3.800  dcont ;
+    VIA 1.800 24.500  dcont ;
+    VIA 4.800 22.500  dcont ;
+    VIA 4.800 20.500  dcont ;
+    VIA 4.800 24.500  dcont ;
+    VIA 6.800 3.800  dcont ;
+    VIA 7.800 24.500  dcont ;
+    VIA 7.800 22.500  dcont ;
+    VIA 7.800 20.500  dcont ;
+    VIA 5.500 29.500  nsubcont ;
+    VIA 5.000 9.500  pcont ;
+    VIA 2.000 15.500  pcont ;
+    VIA 5.000 0.500  psubcont ;
+  END
+END na21
+
+MACRO dcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END dcont
+
+MACRO nsubcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END nsubcont
+
+MACRO pcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END pcont
+
+MACRO psubcont
+  CLASS CORE ;
+  OBS
+    LAYER ML1 ;
+      RECT -1.000 -1.000  1.000 1.000  ;
+  END
+END psubcont
+
+
+END LIBRARY
