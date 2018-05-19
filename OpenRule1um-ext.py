@@ -41,9 +41,9 @@ DM_via1 = geomGetShapes("DM_via1", "drawing")
 DM_via2 = geomGetShapes("DM_via2", "drawing")
 
 print "# Form derived layers"
-#PSUB = geomNot(NWL); # psub
-bkgnd     = geomBkgnd()
-PSUB      = geomAndNot(bkgnd, NWL)
+PSUB = geomNot(NWL); # psub
+#bkgnd     = geomBkgnd()
+#PSUB      = geomAndNot(bkgnd, NWL)
 
 GATE = geomAnd(POL, DIFF);
 Dif = geomAndNot(DIFF, GATE)
@@ -90,6 +90,7 @@ geomConnect( [
 print "# Save interconnect"
 saveInterconnect([
 		NWL,
+    PSUB,
 		DM_dcn,
 		DM_pcn,
 		DM_nscn,
