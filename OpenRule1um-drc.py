@@ -3,6 +3,7 @@
 # ver1.01 : 2018/2/23: akita11 akita@ifdl.jp (bug fix)
 # ver1.10 : 2018/3/17: akita11 akita@ifdl.jp (add rules based on rule v110)
 # ver1.20 : 2018/4/13: akita11 akita@ifdl.jp (add rules based on rule v120)
+# ver1.21 : 2018/6/5 : akita11 akita@ifdl.jp (dummy cell overlap, >= Glade 4.6.46
 
 # simpe function to print # errors - unused.
 def printErrors(msg) :
@@ -50,6 +51,7 @@ NMOS = geomAnd(Ndiff, POL); # nMOS channel
 PMOS = geomAnd(Pdiff, POL); # pMOS channel
 MOS = geomOr(NMOS, PMOS);
 
+
 # Form connectivity
 geomConnect( [
         [DM_dcn, Pdiff, ML1],
@@ -58,7 +60,10 @@ geomConnect( [
         [DM_nscn, NWL_dp, ML1],
         [DM_pscn, PSUB, ML1],
         [DM_via1, ML1, ML2],
-        [DM_via2, ML2, ML3]
+        [DM_via2, ML2, ML3],
+        [DM_pcn, POL, ML1],
+#        [ptap, Pdiff, PSUB],
+#        [ntap, Ndiff, NWL]
 	     ] )
 
 print "Check GAP"
@@ -98,31 +103,36 @@ geomSpace(DM_via1, DM_pscn, 0.5, "via1-pscont space < 0.5")
 geomSpace(DM_via1, DM_via2, 0.5, "via1-via2 space < 0.5")
 geomSpace(DM_dcn, 1.0, "dcont space < 1.0")
 
-
 print "Check Overlap"
 DM_dcn_r = geomGetRawShapes("DM_dcn", "drawing")
 DM_dcn_r_ovlp = geomAnd(DM_dcn_r)
-geomArea(DM_dcn_r_ovlp, 0, 0, "dcont overlap")
+#geomArea(DM_dcn_r_ovlp, 0, 0, "dcont overlap")
+geomAreaIn(DM_dcn_r_ovlp, 0, 4, "dcont overlap") # >= Glade 4.6.46
 
 DM_pcn_r = geomGetRawShapes("DM_pcn", "drawing")
 DM_pcn_r_ovlp = geomAnd(DM_pcn_r)
-geomArea(DM_pcn_r_ovlp, 0, 0, "pcont overlap")
+#geomArea(DM_pcn_r_ovlp, 0, 0, "pcont overlap")
+geomAreaIn(DM_pcn_r_ovlp, 0, 4, "pcont overlap") # >= Glade 4.6.46
 
 DM_nscn_r = geomGetRawShapes("DM_nscn", "drawing")
 DM_nscn_r_ovlp = geomAnd(DM_nscn_r)
-geomArea(DM_nscn_r_ovlp, 0, 0, "nsubcont overlap")
+#geomArea(DM_nscn_r_ovlp, 0, 0, "nsubcont overlap")
+geomAreaIn(DM_nscn_r_ovlp, 0, 16, "nsubcont overlap") # >= Glade 4.6.46
 
 DM_pscn_r = geomGetRawShapes("DM_pscn", "drawing")
 DM_pscn_r_ovlp = geomAnd(DM_pscn_r)
-geomArea(DM_pscn_r_ovlp, 0, 0, "psubcont overlap")
+#geomArea(DM_pscn_r_ovlp, 0, 0, "psubcont overlap")
+geomAreaIn(DM_pscn_r_ovlp, 0, 4, "psubcont overlap") # >= Glade 4.6.46
 
 DM_via1_r = geomGetRawShapes("DM_via1", "drawing")
 DM_via1_r_ovlp = geomAnd(DM_via1_r)
-geomArea(DM_via1_r_ovlp, 0, 0, "via1 overlap") # not shown in rule v110
+#geomArea(DM_via1_r_ovlp, 0, 0, "via1 overlap") # not shown in rule v110
+geomAreaIn(DM_via1_r_ovlp, 0, 4, "via1 overlap") # >= Glade 4.6.46
 
 DM_via2_r = geomGetRawShapes("DM_via2", "drawing")
 DM_via2_r_ovlp = geomAnd(DM_via2_r)
-geomArea(DM_via2_r_ovlp, 0, 0, "via2 overlap") # not shown in rule v110
+#geomArea(DM_via2_r_ovlp, 0, 0, "via2 overlap") # not shown in rule v110
+geomAreaIn(DM_via2_r_ovlp, 0, 4, "via2 overlap") # >= Glade 4.6.46
 
 DM_dcn_MOS = geomAnd(DM_dcn, MOS)
 geomArea(DM_dcn_MOS, 0, 0, "dcn-MOS overlap")
