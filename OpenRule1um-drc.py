@@ -1,9 +1,9 @@
 # 1um Standard Rule DRC
-# ver1.00 : 2018/2/10: akita11 akita@ifdl.jp
-# ver1.01 : 2018/2/23: akita11 akita@ifdl.jp (bug fix)
-# ver1.10 : 2018/3/17: akita11 akita@ifdl.jp (add rules based on rule v110)
-# ver1.20 : 2018/4/13: akita11 akita@ifdl.jp (add rules based on rule v120)
-# ver1.21 : 2018/6/5 : akita11 akita@ifdl.jp (dummy cell overlap, >= Glade 4.6.46
+# ver1.00 : 2018/2/10:  akita11 akita@ifdl.jp
+# ver1.01 : 2018/2/23:  akita11 akita@ifdl.jp (bug fix)
+# ver1.10 : 2018/3/17:  akita11 akita@ifdl.jp (add rules based on rule v110)
+# ver1.20 : 2018/4/13:  akita11 akita@ifdl.jp (add rules based on rule v120)
+# ver1.30 : 2018/11/27: akita11 akita@ifdl.jp (add rules based for HPOL)
 
 # simpe function to print # errors - unused.
 def printErrors(msg) :
@@ -50,7 +50,7 @@ Pdiff = geomAnd(DIFF, Parea);
 NMOS = geomAnd(Ndiff, POL); # nMOS channel
 PMOS = geomAnd(Pdiff, POL); # pMOS channel
 MOS = geomOr(NMOS, PMOS);
-
+HIPOL = geomAnd(HPOL, POL); # HighPolyResistor
 
 # Form connectivity
 geomConnect( [
@@ -60,10 +60,7 @@ geomConnect( [
         [DM_nscn, NWL_dp, ML1],
         [DM_pscn, PSUB, ML1],
         [DM_via1, ML1, ML2],
-        [DM_via2, ML2, ML3],
-        [DM_pcn, POL, ML1],
-#        [ptap, Pdiff, PSUB],
-#        [ntap, Ndiff, NWL]
+        [DM_via2, ML2, ML3]
 	     ] )
 
 print "Check GAP"
@@ -82,13 +79,11 @@ geomSpace(POL, DIFF, 0.5, "POL-diff space < 0.5")
 geomSpace(DIFF, DM_dcn, 1, "Diff-dcont space < 1.0")
 geomSpace(MOS, DM_dcn, 0.5, "MOS-dcont space < 0.5")
 geomSpace(DIFF, DM_pcn, 1.0, "Diff-pcont space < 1.5")
-#geomSpace(POL, DM_pcn, 0.5, "POL-pcont space < 0.5")
-geomSpace(POL, DM_pcn, 0.5, project, "POL-pcont space < 0.5")
+geomSpace(POL, DM_pcn, 0.5, "POL-pcont space < 0.5")
 geomSpace(ML1, 1, "ML1 space < 1.0")
 geomSpace(ML2, 1, "ML2 space < 1.0")
 geomSpace(ML3, 1, "ML3 space < 1.0")
-#geomSpace(ML1, DM_dcn, 0.5, "ML1-dcont space < 0.5")
-geomSpace(ML1, DM_dcn, 0.5, project, "ML1-dcont space < 0.5")
+geomSpace(ML1, DM_dcn, 0.5, "ML1-dcont space < 0.5")
 geomSpace(ML1, DM_pcn, 0.5, "ML1-pcont space < 0.5")
 geomSpace(DM_via1, 0.5, "via1 space < 0.5")
 geomSpace(DM_via2, 0.5, "via2 space < 0.5")
@@ -104,37 +99,33 @@ geomSpace(DM_via1, DM_nscn, 0.5, "via1-nscont space < 0.5")
 geomSpace(DM_via1, DM_pscn, 0.5, "via1-pscont space < 0.5")
 geomSpace(DM_via1, DM_via2, 0.5, "via1-via2 space < 0.5")
 geomSpace(DM_dcn, 1.0, "dcont space < 1.0")
+geomSpace(HIPOL, 1.0, "Poly in HPOL space < 1.0")
+geomSpace(POL, HIPOL, 1.0, "Poly outside HPOL space < 1.0")
 
 print "Check Overlap"
 DM_dcn_r = geomGetRawShapes("DM_dcn", "drawing")
 DM_dcn_r_ovlp = geomAnd(DM_dcn_r)
-#geomArea(DM_dcn_r_ovlp, 0, 0, "dcont overlap")
-geomAreaIn(DM_dcn_r_ovlp, 0, 4, "dcont overlap") # >= Glade 4.6.46
+geomArea(DM_dcn_r_ovlp, 0, 0, "dcont overlap")
 
 DM_pcn_r = geomGetRawShapes("DM_pcn", "drawing")
 DM_pcn_r_ovlp = geomAnd(DM_pcn_r)
-#geomArea(DM_pcn_r_ovlp, 0, 0, "pcont overlap")
-geomAreaIn(DM_pcn_r_ovlp, 0, 4, "pcont overlap") # >= Glade 4.6.46
+geomArea(DM_pcn_r_ovlp, 0, 0, "pcont overlap")
 
 DM_nscn_r = geomGetRawShapes("DM_nscn", "drawing")
 DM_nscn_r_ovlp = geomAnd(DM_nscn_r)
-#geomArea(DM_nscn_r_ovlp, 0, 0, "nsubcont overlap")
-geomAreaIn(DM_nscn_r_ovlp, 0, 16, "nsubcont overlap") # >= Glade 4.6.46
+geomArea(DM_nscn_r_ovlp, 0, 0, "nsubcont overlap")
 
 DM_pscn_r = geomGetRawShapes("DM_pscn", "drawing")
 DM_pscn_r_ovlp = geomAnd(DM_pscn_r)
-#geomArea(DM_pscn_r_ovlp, 0, 0, "psubcont overlap")
-geomAreaIn(DM_pscn_r_ovlp, 0, 4, "psubcont overlap") # >= Glade 4.6.46
+geomArea(DM_pscn_r_ovlp, 0, 0, "psubcont overlap")
 
 DM_via1_r = geomGetRawShapes("DM_via1", "drawing")
 DM_via1_r_ovlp = geomAnd(DM_via1_r)
-#geomArea(DM_via1_r_ovlp, 0, 0, "via1 overlap") # not shown in rule v110
-geomAreaIn(DM_via1_r_ovlp, 0, 4, "via1 overlap") # >= Glade 4.6.46
+geomArea(DM_via1_r_ovlp, 0, 0, "via1 overlap") # not shown in rule v110
 
 DM_via2_r = geomGetRawShapes("DM_via2", "drawing")
 DM_via2_r_ovlp = geomAnd(DM_via2_r)
-#geomArea(DM_via2_r_ovlp, 0, 0, "via2 overlap") # not shown in rule v110
-geomAreaIn(DM_via2_r_ovlp, 0, 4, "via2 overlap") # >= Glade 4.6.46
+geomArea(DM_via2_r_ovlp, 0, 0, "via2 overlap") # not shown in rule v110
 
 DM_dcn_MOS = geomAnd(DM_dcn, MOS)
 geomArea(DM_dcn_MOS, 0, 0, "dcn-MOS overlap")
@@ -161,12 +152,16 @@ geomWidth(POL,  1, "POL width < 1.0")
 geomWidth(ML1, 1, "ML1 width < 1.0")
 geomWidth(ML2, 1, "ML2 width < 1.0")
 geomWidth(ML3, 1, "ML3 width < 1.0")
+geomWidth(HIPOL, 2.0, "Poly in HPOL width < 2.0")
+
+## ToDo: check HIPOL length (20-80um) (181127:akita11)
 
 print "Check Enclose"
 geomEnclose(NWL, Pdiff, 2, "Pdiff enclosure in NWL < 2.0")
 geomArea(geomAnd(PSUB, DM_nscn), 0, 0, "nsubcon outside NWL") # not shown in rule v110
 geomEnclose(Parea, DIFF, 0.5, "DIFF enclosure in Parea < 0.5")
 geomEnclose(Narea, DIFF, 0.5, "DIFF enclosure in Narea < 0.5")
+geomEnclose(HPOL, HIPOL, 5.0, "POL enclosure in HPOL < 5.0")
 
 print "Check MOS gate extension"
 geomExtension(POL, DIFF, 1, "POL gate extension < 1.0")
