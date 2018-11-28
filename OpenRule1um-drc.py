@@ -4,6 +4,7 @@
 # ver1.10 : 2018/3/17:  akita11 akita@ifdl.jp (add rules based on rule v110)
 # ver1.20 : 2018/4/13:  akita11 akita@ifdl.jp (add rules based on rule v120)
 # ver1.30 : 2018/11/27: akita11 akita@ifdl.jp (add rules based for HPOL)
+# ver1.31 : 2018/11/28: akita11 akita@ifdl.jp (modified HPOL gap rule)
 
 # simpe function to print # errors - unused.
 def printErrors(msg) :
@@ -99,7 +100,8 @@ geomSpace(DM_via1, DM_nscn, 0.5, "via1-nscont space < 0.5")
 geomSpace(DM_via1, DM_pscn, 0.5, "via1-pscont space < 0.5")
 geomSpace(DM_via1, DM_via2, 0.5, "via1-via2 space < 0.5")
 geomSpace(DM_dcn, 1.0, "dcont space < 1.0")
-geomSpace(HIPOL, 1.0, "Poly in HPOL space < 1.0")
+#geomSpace(HIPOL, 1.0, "Poly in HPOL space < 1.0")
+geomSpace(HIPOL, 2.0, "Poly in HPOL space < 2.0")
 geomSpace(POL, HIPOL, 1.0, "Poly outside HPOL space < 1.0")
 
 print "Check Overlap"
