@@ -33,8 +33,8 @@ githubアカウントがある方は[こちら](https://github.com/MakeLSI/OpenR
 ## 手順
 
 1. Gladeを起動し、OpenRule1umライブラリを開く
-2. Edit -> Display Option(E)を開き、Display Setting内のDisplay Grid、Snap Gridを、いずれも「0.06625」に設定する（※0.0625=1/16）
-3. インバータ(inv1)の回路図(schematic)を開き、これを参考に、作成する論理回路セルの回路図を作成する（Library Browserで、inv1->schematicsを右クリック→コピーから対象のセルのschematicにコピーして、それを編集するのが早くて便利です）
+2. インバータ(inv1)の回路図(schematic)を開き、これを参考に、作成する論理回路セルの回路図を作成する（Library Browserで、inv1->schematicsを右クリック→コピーから対象のセルのschematicにコピーして、それを編集するのが早くて便利です）
+3. 回路図を開いた状態で、View -> Display Options(E)を開き、Display Setting内のDisplay Grid、Snap Gridを、いずれも「0.06625」に設定する（※0.0625=1/16）
 
 * 端子(Pin)（電源（VDDとVSS）、入力、出力）はCreate->Pinsで作成
 * 端子(Pin)は、グリッドの位置に載せる
