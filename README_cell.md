@@ -40,7 +40,8 @@ githubアカウントがある方は[こちら](https://github.com/MakeLSI/OpenR
 * 端子(Pin)は、グリッドの位置に載せる
 
 4. 回路図が完成したら、Check->CheckCellviewでチェックを実行し、未接続配線などがないかを確認する
-5. チェックがOKなら、Create->Symbolで回路図記号(symbol)を作成する
+5. LVSをかけて回路図が正しいかをチェックする。その回路のlayoutを開き、Verify→Extractで、ルールファイルに「OpenRule1um-ext.py」を指定して実行すると。extractedビューがつくられる。そのextractedビューを開いた状態で、Verify→LVSへ進み、回路図側（右側）の一番上で「schematic」を選ぶ（これにより、回路図schematicを使ってLVSが行われる）。そしてOKして実行。エラーがないかを確認する。エラーの見方は様々だが、回路図のミス、レイアウトのミスの場合もある。不明な場合はMLへ質問を。
+6. LVSがOKなら、Create->Symbolで回路図記号(symbol)を作成する
 
 * 端子の配置位置を指定できるので、VSS(GND側)はBottom(下)に変更。そのほかは、基本的にはVDDが上(Top)、入力が左(Left)、出力が右(Right)にする
 * 形状はとりあえず長方形(Rectangle)でOK
