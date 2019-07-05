@@ -90,7 +90,7 @@ geomConnect( [
 print "# Save interconnect"
 saveInterconnect([
 		NWL,
-    PSUB,
+                PSUB,
 		DM_dcn,
 		DM_pcn,
 		DM_nscn,
@@ -99,7 +99,7 @@ saveInterconnect([
 		DM_via2,
     		[Ndiff, "DIFF"],
 		[Pdiff, "DIFF"],
-		[POL, "POL"],
+		POL,
 		ML1,
 		ML2,
 		ML3

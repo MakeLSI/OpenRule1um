@@ -80,12 +80,12 @@ geomSpace(POL, DIFF, 0.5, "POL-diff space < 0.5")
 geomSpace(DIFF, DM_dcn, 1, "Diff-dcont space < 1.0")
 geomSpace(MOS, DM_dcn, 0.5, "MOS-dcont space < 0.5")
 geomSpace(DIFF, DM_pcn, 1.0, "Diff-pcont space < 1.5")
-geomSpace(POL, DM_pcn, 0.5, "POL-pcont space < 0.5")
+geomSpace(POL, DM_pcn, 0.5, "POL-pcont space < 0.5, may be pseudo-error (can be ignored)")
 geomSpace(ML1, 1, "ML1 space < 1.0")
 geomSpace(ML2, 1, "ML2 space < 1.0")
 geomSpace(ML3, 1, "ML3 space < 1.0")
-geomSpace(ML1, DM_dcn, 0.5, "ML1-dcont space < 0.5")
-geomSpace(ML1, DM_pcn, 0.5, "ML1-pcont space < 0.5")
+geomSpace(ML1, DM_dcn, 0.5, "ML1-dcont space < 0.5, may be pseudo-error (can be ignored)")
+geomSpace(ML1, DM_pcn, 0.5, "ML1-pcont space < 0.5, may be pseudo-error (can be ignored)")
 geomSpace(DM_via1, 0.5, "via1 space < 0.5")
 geomSpace(DM_via2, 0.5, "via2 space < 0.5")
 #geomSpace(ML1, DM_nscn, 1, "ML1-nsubcont space < 1.0")
@@ -107,11 +107,11 @@ geomSpace(POL, HIPOL, 1.0, "Poly outside HPOL space < 1.0")
 print "Check Overlap"
 DM_dcn_r = geomGetRawShapes("DM_dcn", "drawing")
 DM_dcn_r_ovlp = geomAnd(DM_dcn_r)
-geomArea(DM_dcn_r_ovlp, 0, 0, "dcont overlap")
+geomArea(DM_dcn_r_ovlp, 0, 16, "dcont overlap") # check partial overlap
 
 DM_pcn_r = geomGetRawShapes("DM_pcn", "drawing")
 DM_pcn_r_ovlp = geomAnd(DM_pcn_r)
-geomArea(DM_pcn_r_ovlp, 0, 0, "pcont overlap")
+geomArea(DM_pcn_r_ovlp, 0, 16, "pcont overlap") # check partial overlap
 
 DM_nscn_r = geomGetRawShapes("DM_nscn", "drawing")
 DM_nscn_r_ovlp = geomAnd(DM_nscn_r)
@@ -119,15 +119,15 @@ geomArea(DM_nscn_r_ovlp, 0, 0, "nsubcont overlap")
 
 DM_pscn_r = geomGetRawShapes("DM_pscn", "drawing")
 DM_pscn_r_ovlp = geomAnd(DM_pscn_r)
-geomArea(DM_pscn_r_ovlp, 0, 0, "psubcont overlap")
+geomArea(DM_pscn_r_ovlp, 0, 16, "psubcont overlap") # check partial overlap
 
 DM_via1_r = geomGetRawShapes("DM_via1", "drawing")
 DM_via1_r_ovlp = geomAnd(DM_via1_r)
-geomArea(DM_via1_r_ovlp, 0, 0, "via1 overlap") # not shown in rule v110
+geomArea(DM_via1_r_ovlp, 0, 16, "via1 overlap") # check partial overlap
 
 DM_via2_r = geomGetRawShapes("DM_via2", "drawing")
 DM_via2_r_ovlp = geomAnd(DM_via2_r)
-geomArea(DM_via2_r_ovlp, 0, 0, "via2 overlap") # not shown in rule v110
+geomArea(DM_via2_r_ovlp, 0, 16, "via2 overlap") # check partial overlap
 
 DM_dcn_MOS = geomAnd(DM_dcn, MOS)
 geomArea(DM_dcn_MOS, 0, 0, "dcn-MOS overlap")
