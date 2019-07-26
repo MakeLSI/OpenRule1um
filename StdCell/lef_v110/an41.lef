@@ -1,17 +1,25 @@
-VERSION 5.5 ;
+VERSION 5.3 ;
+
 NAMESCASESENSITIVE ON ;
-BUSBITCHARS "[]" ;
-DIVIDERCHAR "/" ;
+
+UNITS
+  DATABASE MICRONS 1000 ;
+END UNITS
+
+
+
+
+
+
+
+
+
+
 
 MACRO an41
-  CLASS CORE ;
-  SOURCE USER ;
-  ORIGIN 0 0 ;
-  SIZE 18.500 BY 30.000 ;
-  SYMMETRY X Y ;
-  SITE unit ;
+  CLASS BLOCK ;
   PIN A
-    USE SIGNAL ;
+    DIRECTION INPUT ;
     PORT
       LAYER ML2 ;
         POLYGON 1.000 15.500  1.000 17.500  3.000 17.500  3.000 15.500  1.000 
@@ -24,7 +32,7 @@ MACRO an41
     END
   END A
   PIN B
-    USE SIGNAL ;
+    DIRECTION INPUT ;
     PORT
       LAYER ML2 ;
         POLYGON 4.000 12.500  4.000 14.500  6.000 14.500  6.000 12.500  4.000 
@@ -37,7 +45,7 @@ MACRO an41
     END
   END B
   PIN C
-    USE SIGNAL ;
+    DIRECTION INPUT ;
     PORT
       LAYER ML2 ;
         POLYGON 7.000 9.700  7.000 11.700  9.000 11.700  9.000 9.700  7.000 
@@ -50,7 +58,7 @@ MACRO an41
     END
   END C
   PIN D
-    USE SIGNAL ;
+    DIRECTION INPUT ;
     PORT
       LAYER ML2 ;
         POLYGON 10.000 12.500  10.000 14.500  12.000 14.500  12.000 12.500  
@@ -63,21 +71,21 @@ MACRO an41
     END
   END D
   PIN VDD
-    USE POWER ;
+    DIRECTION INOUT ;
     PORT
       LAYER ML1 ;
         RECT -0.500 28.500  19.000 30.500  ;
     END
   END VDD
   PIN VSS
-    USE GROUND ;
+    DIRECTION INOUT ;
     PORT
       LAYER ML1 ;
         RECT -0.500 -0.500  19.000 1.500  ;
     END
   END VSS
   PIN Y
-    USE SIGNAL ;
+    DIRECTION OUTPUT ;
     PORT
       LAYER ML1 ;
         POLYGON 16.000 12.700  16.000 14.700  18.000 14.700  18.000 12.700  
@@ -95,28 +103,6 @@ MACRO an41
     END
   END Y
   OBS
-    LAYER ML1 ;
-      WIDTH 1.400  ;
-      PATH 1.800 21.300 1.800 28.500  ;
-      WIDTH 1.000  ;
-      PATH 1.800 1.000 1.800 3.800  ;
-      WIDTH 1.400  ;
-      PATH 4.800 21.300 4.800 24.500  ;
-      WIDTH 1.400  ;
-      PATH 7.800 21.300 7.800 28.500  ;
-      WIDTH 1.000  ;
-      PATH 4.800 20.500 4.800 18.000 13.800 18.000 13.800 10.000 10.800 10.000 
-      10.800 3.800  ;
-      WIDTH 1.000  ;
-      PATH 10.800 20.500 10.800 18.000  ;
-      WIDTH 1.400  ;
-      PATH 10.800 21.300 10.800 24.500  ;
-      WIDTH 1.400  ;
-      PATH 13.800 21.300 13.800 28.500  ;
-      WIDTH 1.400  ;
-      PATH 13.800 21.300 13.800 24.500  ;
-      WIDTH 1.400  ;
-      PATH 16.800 21.300 16.800 24.500  ;
     VIA 1.800 22.500  dcont ;
     VIA 1.800 20.500  dcont ;
     VIA 1.800 3.800  dcont ;
@@ -145,40 +131,39 @@ MACRO an41
     VIA 5.000 13.500  pcont ;
     VIA 2.000 16.500  pcont ;
     VIA 5.000 0.500  psubcont ;
+    VIA 17.000 13.700  Via ;
+    VIA 11.000 13.500  Via ;
+    VIA 8.000 10.700  Via ;
+    VIA 5.000 13.500  Via ;
+    VIA 2.000 16.500  Via ;
   END
 END an41
 
 MACRO dcont
-  CLASS CORE ;
-  OBS
-    LAYER ML1 ;
-      RECT -1.000 -1.000  1.000 1.000  ;
-  END
+  CLASS BLOCK ;
 END dcont
 
 MACRO pcont
-  CLASS CORE ;
-  OBS
-    LAYER ML1 ;
-      RECT -1.000 -1.000  1.000 1.000  ;
-  END
+  CLASS BLOCK ;
 END pcont
 
 MACRO nsubcont
-  CLASS CORE ;
+  CLASS BLOCK ;
   OBS
-    LAYER ML1 ;
-      RECT -1.000 -1.000  1.000 1.000  ;
+    VIA 0.000 0.000  dcont ;
   END
 END nsubcont
 
 MACRO psubcont
-  CLASS CORE ;
+  CLASS BLOCK ;
   OBS
-    LAYER ML1 ;
-      RECT -1.000 -1.000  1.000 1.000  ;
+    VIA 0.000 0.000  dcont ;
   END
 END psubcont
+
+MACRO Via
+  CLASS BLOCK ;
+END Via
 
 
 END LIBRARY
