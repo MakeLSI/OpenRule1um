@@ -125,9 +125,10 @@ extractMOS("pch", PMOS, POL, Pdiff, NWL)
 #	print "# Extract MOS capacitors"
 #	extractMosCap("nmoscap_ex", mcap, polyg, active)
 
-# Extract parasitics. 
-#extractParasitic(metal1, 1.15e-14, 1.50e-14, "VSS")
-#extractParasitic2(metal1, metal2, 2.0e-14, 2.0e-14)
+print "# Extract parasitics"
+# note : These are tentative (un-realistic) parameters (by akita11: 190722)
+extractParasitic(ML1, 0.02e-15, 0.0e-15, "VSS")
+extractParasitic2(ML1, ML2, 0.05e-15, 0.0e-15)
 #extractParasitic3D("vss", "vss")
 
 # Exit boolean package, freeing memory
