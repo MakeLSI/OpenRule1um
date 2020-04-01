@@ -22,13 +22,14 @@ OpenRule1um
 
 * OpenRule1um.tch : Glade用のテクノロジファイル
 * OpenRule1um-drc.py : Glade用のDRCルールファイル
+* OpenRule1um-lvs.py : Glade用のLVSルールファイル
+* OpenRule1um-ext.py : Glade用の回路抽出ルールファイル（寄生容量等の値は仮想的な値です）
 * OpenRule1um_summary.pdf : 設計ルールの要約
 * OpenRule1um.xlsx : 設計ルールとレイヤ定義 (A.LSI山田様作のものをベース）
 
 ## 近未来的ToDo
 
 * DRCルールファイルの検証
-* ロジックなどのスタンダードセル、IP
 * 他のEDAツール(wgex等)の設定ファイル
 
 ## Author
