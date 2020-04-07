@@ -1,0 +1,41 @@
+.SUBCKT rff1m2_r CK S VDD Q D VSS
+*.PININFO  CK:B D:I Q:O VDD:B S:I VSS:B
+*
+*.SCALE METER
+*.GLOBAL gnd vdd
+*
+M29  n6 n12 VSS VSS nch  w=2u l=1u m=1
+M2  n18 n15 n14 VDD pch  w=6u l=1u m=1
+M24  n11 n8 n12 VDD pch  w=6u l=1u m=1
+M20  n12 n8 n13 VSS nch  w=2u l=1u m=1
+M26  n12 n15 n25 VSS nch  w=2u l=1u m=1
+M27  n13 n6 VSS VSS nch  w=2u l=1u m=1
+M22  VDD n6 n26 VDD pch  w=6u l=1u m=1
+M0  VDD n15 n8 VDD pch  w=6u l=1u m=1
+M14  n28 S n5 VDD pch  w=6u l=1u m=1
+M12  VDD n14 n28 VDD pch  w=6u l=1u m=1
+M4  n14 n8 n17 VSS nch  w=2u l=1u m=1
+M6  n15 n21 VSS VSS nch  w=2u l=1u m=1
+M17  n2 S n6 VDD pch  w=6u l=1u m=1
+M23  n25 n5 VSS VSS nch  w=2u l=1u m=1
+M28  n6 S VSS VSS nch  w=2u l=1u m=1
+M19  VDD n12 n2 VDD pch  w=6u l=1u m=1
+M11  n14 n15 n23 VSS nch  w=2u l=1u m=1
+M16  n5 n14 VSS VSS nch  w=2u l=1u m=1
+M9  n23 n5 VSS VSS nch  w=2u l=1u m=1
+M34  n21 CK VSS VSS nch  w=2u l=1u m=1
+M15  n5 S VSS VSS nch  w=2u l=1u m=1
+M25  VDD n5 n11 VDD pch  w=6u l=1u m=1
+M30  VDD n6 QB VDD pch  w=6u l=1u m=1
+M5  n17 D VSS VSS nch  w=2u l=1u m=1
+M32_40  Q QB VSS VSS nch  w=2u l=1u m=1
+M3  VDD D n18 VDD pch  w=6u l=1u m=1
+M21  n26 n15 n12 VDD pch  w=6u l=1u m=1
+M32  VDD CK n21 VDD pch  w=6u l=1u m=1
+M8  VDD n5 n16 VDD pch  w=6u l=1u m=1
+M7  VDD n21 n15 VDD pch  w=6u l=1u m=1
+M31  VDD QB Q VDD pch  w=6u l=1u m=1
+M1  n8 n15 VSS VSS nch  w=2u l=1u m=1
+M33  QB n6 VSS VSS nch  w=2u l=1u m=1
+M10  n16 n8 n14 VDD pch  w=6u l=1u m=1
+.ENDS

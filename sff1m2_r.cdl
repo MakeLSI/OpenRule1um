@@ -1,0 +1,57 @@
+*******************************************************************************
+* CDL netlist
+*
+* Library : OpenRule1um_StdCell
+* Top Cell Name: sff1m2_r
+* View Name: schematic
+* Netlist created: 07.4.2020 15:22:50
+*******************************************************************************
+
+*.SCALE METER
+*.GLOBAL VDD VSS
+
+*******************************************************************************
+* Library Name: OpenRule1um_StdCell
+* Cell Name:    sff1m2_r
+* View Name:    schematic
+*******************************************************************************
+
+.SUBCKT sff1m2_r CK S Q D 
+*.PININFO CK:I S:I Q:O D:I QB:O
+
+M24 n10 n7 n11 VDD pch w=6u l=1u m=1
+M20 n11 n7 n12 VSS nch w=2u l=1u m=1
+M2 n19 n16 n13 VDD pch w=6u l=1u m=1
+M29 n27 n11 VSS VSS nch w=2u l=1u m=1
+M26 n11 n16 n25 VSS nch w=2u l=1u m=1
+M27 n12 n9 VSS VSS nch w=2u l=1u m=1
+M22 VDD n9 n26 VDD pch w=6u l=1u m=1
+M0 VDD n16 n7 VDD pch w=6u l=1u m=1
+M14 VDD n14 n5 VDD pch w=6u l=1u m=1
+M12 VDD n13 n5 VDD pch w=6u l=1u m=1
+M4 n13 n7 n18 VSS nch w=2u l=1u m=1
+M6 n16 n22 VSS VSS nch w=2u l=1u m=1
+M17 VDD n14 n9 VDD pch w=6u l=1u m=1
+M23 n25 n5 VSS VSS nch w=2u l=1u m=1
+M28 n9 n14 n27 VSS nch w=2u l=1u m=1
+M19 VDD n11 n9 VDD pch w=6u l=1u m=1
+M11 n13 n16 n24 VSS nch w=2u l=1u m=1
+M16 n15 n13 VSS VSS nch w=2u l=1u m=1
+M9 n24 n5 VSS VSS nch w=2u l=1u m=1
+M15 n5 n14 n15 VSS nch w=2u l=1u m=1
+M34 n22 CK VSS VSS nch w=2u l=1u m=1
+M25 VDD n5 n10 VDD pch w=6u l=1u m=1
+M30 VDD n9 QB VDD pch w=6u l=1u m=1
+M5 n18 D VSS VSS nch w=2u l=1u m=1
+M32_40 Q QB VSS VSS nch w=2u l=1u m=1
+M21 n26 n16 n11 VDD pch w=6u l=1u m=1
+M3 VDD D n19 VDD pch w=6u l=1u m=1
+M8 VDD n5 n17 VDD pch w=6u l=1u m=1
+M7 VDD n22 n16 VDD pch w=6u l=1u m=1
+M32 VDD CK n22 VDD pch w=6u l=1u m=1
+M31 VDD QB Q VDD pch w=6u l=1u m=1
+M1 n7 n16 VSS VSS nch w=2u l=1u m=1
+M10 n17 n7 n13 VDD pch w=6u l=1u m=1
+M33 QB n9 VSS VSS nch w=2u l=1u m=1
+.ENDS
+

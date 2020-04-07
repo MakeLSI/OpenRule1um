@@ -1,0 +1,41 @@
+-----------------------------------------------------------------------------
+Gemini 2.7.4 (64 bit) Compiled at 12:06:36 on Feb 21 2020 by Visual C++ 13.2
+-----------------------------------------------------------------------------
+
+Gemini started at 15:15:01 on 07/04/2020
+
+Command line:
+	-w 10.000000 -g C:\Users\akita\Documents\GitHub\OpenRule1um\sff1_r.err -S C:\Users\akita\Documents\GitHub\OpenRule1um\sff1_r_extracted.cdl C:\Users\akita\Documents\GitHub\OpenRule1um\sff1_r.cdl_flat 
+
+-----------------------------------------------------------------------------
+	Netlist summary before reduction : sff1_r_extracted.cdl
+-----------------------------------------------------------------------------
+  Number of devices :       34
+  Number of nets    :       24
+  Number of ports   :       0
+
+-----------------------------------------------------------------------------
+	Netlist summary before reduction : sff1_r.cdl_flat
+-----------------------------------------------------------------------------
+  Number of devices :       34
+  Number of nets    :       24
+  Number of ports   :       4
+
+-----------------------------------------------------------------------------
+	Netlist summary after reduction : 
+-----------------------------------------------------------------------------
+		sff1_r_extracted.cdl	  sff1_r.cdl_flat
+  Number of devices :       24			24
+  Number of nets    :       14			14
+  Number of ports   :       0			4
+
+There were no device property errors.
+28 (73%) matches were found by local matching.
+All nodes were matched in 4 passes.
+
+The netlists match.
+
+0 devices and 0 nets written to C:\Users\akita\Documents\GitHub\OpenRule1um\sff1_r.err
+
+Gemini completed at 15:15:01 on 07/04/2020
+
