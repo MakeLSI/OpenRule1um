@@ -14,9 +14,9 @@ OpenRule1um
 ** CELL_nsubcont : NwellとML1とのコンタクト
 ** CELL_psubcont : PsubとML1とのコンタクト
 ** CELL_via1 : ML1とML2のビア
-** CELL_via2 : ML2とML3のビア
+** (CELL_via2 : ML2とML3のビア)
 
-* Glade用の↑のセルは、ディレクトリOpenRule1um_StdCellの中にあります。Gladeでライブラリとしてこのディレクトリを開くことで使用できます。また各種論理ゲートもあります。（詳細はそのディレクトリ内のREADME.mdを参照）
+* Glade用の↑のセルは、ディレクトリGlade/OpenRule1um_Basicの中にあります。Gladeでライブラリとしてこのディレクトリを開くことで使用できます。
 
 ## 設計ルール
 
@@ -26,11 +26,6 @@ OpenRule1um
 * OpenRule1um-ext.py : Glade用の回路抽出ルールファイル（寄生容量等の値は仮想的な値です）
 * OpenRule1um_summary.pdf : 設計ルールの要約
 * OpenRule1um.xlsx : 設計ルールとレイヤ定義 (A.LSI山田様作のものをベース）
-
-## 近未来的ToDo
-
-* DRCルールファイルの検証
-* 他のEDAツール(wgex等)の設定ファイル
 
 ## Author
 
