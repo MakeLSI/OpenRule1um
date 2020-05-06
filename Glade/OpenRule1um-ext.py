@@ -127,8 +127,10 @@ extractMOS("pch", PMOS, POL, Pdiff, NWL)
 
 print "# Extract parasitics"
 # note : These are tentative (un-realistic) parameters (by akita11: 190722)
-extractParasitic(ML1, 0.02e-15, 0.0e-15, "VSS")
-extractParasitic2(ML1, ML2, 0.05e-15, 0.0e-15)
+# M1-Psub : 0.02e-3 * 1e-12 = 0.02fF/um^2
+extractParasitic(ML1, 0.02e-3, 0.0e-3, "VSS")
+# M1-M2  : 0.05e-3 * 1e-12 = 0.05fF/um^2
+extractParasitic2(ML1, ML2, 0.05e-3, 0.0e-3)
 #extractParasitic3D("vss", "vss")
 
 # Exit boolean package, freeing memory
