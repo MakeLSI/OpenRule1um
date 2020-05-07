@@ -1,4 +1,4 @@
-// Technology file for default
+	// Technology file for default
 //
 //	Name	Purpose		gds_num	gds_dtyp	RGBA		sel?	vis?	fillstyle	linestyle
 LAYER	NWL	drawing		1	0	(0,170,0,255)	t	t	dots4	custom1 ;
@@ -27,29 +27,119 @@ LAYER	DM_pscn	drawing		104	0	(0,170,255,255)	t	t	dagger	custom3 ;
 LAYER	DM_via1	drawing		105	0	(104,140,170,255)	t	t	dagger	custom3 ;
 LAYER	DM_via2	drawing		106	0	(204,204,255,255)	t	t	dagger	custom3 ;
 //
+// Layer Function.
+//
+FUNCTION    NWL   drawing WELL ;
+FUNCTION    DIFF  drawing DIFFUSION ;
+FUNCTION    Narea    drawing IMPLANT ;
+FUNCTION    Parea    drawing IMPLANT ;
+FUNCTION	POL	drawing	POLY ;
+FUNCTION	CNT	drawing	CUT ;
+FUNCTION	ML1	drawing	ROUTING ;
+FUNCTION	VIA1	drawing	CUT ;
+FUNCTION	ML2	drawing	ROUTING ;
+FUNCTION	VIA2	drawing	CUT ;
+FUNCTION	ML3	drawing	ROUTING ;
+//
+// Layer Connections.
+//
+CONNECT POL drawing BY cont drawing TO ML1 drawing ;
+CONNECT ML1 drawing BY VIA1 drawing TO ML2 drawing ;
+CONNECT ML2 drawing BY VIA2 drawing TO ML3 drawing ;
+//
 // Layer height / thickness.
 //
 //
-// Device map table.
-//
-//
-// Layer function.
-//
-//
-// Layer Connections.
+//  Device map table.
 //
 //
 // Spacing rules.
 //
+MINWIDTH NWL  drawing 4.0 ;
+MINSPACE NWL  drawing 4.0 ;
+MINAREA  NWL  drawing 16. ;
+MINENC   NWL  drawing DIFF drawing 2.0 ;
+//
+MINWIDTH DIFF drawing 1.0 ;
+MINSPACE DIFF drawing 1.5 ;
+MINAREA  DIFF drawing 1.0 ;
+// Check od extends beyond polyg
+MINEXT   DIF   drawing POL  drawing 1.0 ;
+//
+MINWIDTH POL  drawing 1.0 ;
+MINSPACE POL  drawing 1.0 ;
+MINSPACE POL  drawing DIFF  drawing 1.0 ;
+MINAREA  POL  drawing 1.0 ;
+// Check POL extends beyond od
+MINEXT   POL  drawing DIFF     drawing 1.0 ;
+//
+MINWIDTH Parea   drawing 1.0 ;
+MINSPACE Parea   drawing 1.0 ;
+MINAREA  Parea   drawing 1.0 ;
+MINENC   Parea   drawing DIFF drawing 0.5 ;
+//MINENC   Parea   drawing POL  drawing 1.0 ;
+//
+MINWIDTH Narea   drawing 1.0 ;
+MINSPACE Narea   drawing 1.0 ;
+MINAREA  Narea   drawing 1.0 ;
+MINENC   Narea   drawing DIFF drawing 0.5 ;
+//MINENC   Narea   drawing POL  drawing 1.0 ;
+//
+MINWIDTH CNT   drawing 1.0 ;
+MINSPACE CNT   drawing 1.0 ;
+MINSPACE CNT   drawing POL  drawing 1.0 ;
+MINENC   POL   drawing CNT  drawing 0.5 ;
+MINENC   DIFF  drawing CNT  drawing 0.5 ;
+//
+MINWIDTH ML1 drawing 1.0 ;
+MINSPACE ML1 drawing 1.0 ;
+MINAREA  ML1 drawing 1.0 ;
+MINENC   ML1 drawing CNT drawing 0.5 ;
+MINENC   ML1 drawing VIA1 drawing 0.5 ;
+//
+MINWIDTH VIA1  drawing 1.0 ;
+MINSPACE VIA1  drawing 1.0 ;
+//
+MINWIDTH ML2 drawing 1.0 ;
+MINSPACE ML2 drawing 1.0 ;
+MINAREA  ML2 drawing 1.0 ;
+MINENC   ML2 drawing VIA1 drawing 0.5 ;
+MINENC   ML2 drawing VIA2 drawing 0.5 ;
+//
+MINWIDTH VIA2  drawing 1.0 ;
+MINSPACE VIA2  drawing 1.0 ;
+//
+MINWIDTH ML3 drawing 1.0 ;
+MINSPACE ML3 drawing 1.0 ;
+MINAREA  ML3 drawing 1.0 ;
+//MINENC   ML3 drawing VIA2 drawing 0.5 ;
 //
 // Via rules.
 //
-//VIA ACT_ML1
+//VIA DIFF_M1
+//	ML1 drawing -1.5 -1.5 1.5 1.5
+//	CNT drawing -0.5 -0.5 0.5 0.5
+//	DIFF drawing -1.5 -1.5 1.5 1.5
 //;
-//VIA POL_ML1
+//VIA POL_M1
+//	ML1 drawing -1.5 -1.5 1.5 1.5
+//	CNT drawing  -0.5 -0.5 0.5 0.5
+//	POL drawing -1.5 -1.5 1.5 1.5
 //;
-//VIA M1_M2
+//VIA m1_m2
+//	ML2 drawing -1.5 -1.5 1.5 1.5
+//	VIA1 drawing -0.5 -0.5 0.5 0.5
+//	ML1 drawing -1.5 -1.5 1.5 1.5
 //;
+//VIA m2_m3
+//	ML3 drawing -1.5 -1.5 1.5 1.5
+//	VIA2 drawing -0.5 -0.5 0.5 0.5
+//	ML2 drawing -1.5 -1.5 1.5 1.5
+//;
+//
+// MultiPartPath rules
+//
+//
 //
 // Line Styles.
 //
