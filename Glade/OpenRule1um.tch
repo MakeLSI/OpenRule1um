@@ -26,13 +26,14 @@ LAYER	DM_nscn	drawing		103	0	(0,255,255,255)	t	t	dagger	custom3 ;
 LAYER	DM_pscn	drawing		104	0	(0,170,255,255)	t	t	dagger	custom3 ;
 LAYER	DM_via1	drawing		105	0	(104,140,170,255)	t	t	dagger	custom3 ;
 LAYER	DM_via2	drawing		106	0	(204,204,255,255)	t	t	dagger	custom3 ;
+LAYER   DM_PSUB drawing         120     0       (255,255,255,255)       t       t       empty   custom4 ;
 //
 // Layer Function.
 //
-FUNCTION    NWL   drawing WELL ;
-FUNCTION    DIFF  drawing DIFFUSION ;
-FUNCTION    Narea    drawing IMPLANT ;
-FUNCTION    Parea    drawing IMPLANT ;
+FUNCTION	NWL   drawing WELL ;
+FUNCTION	DIFF  drawing DIFFUSION ;
+FUNCTION    	Narea    drawing IMPLANT ;
+FUNCTION    	Parea    drawing IMPLANT ;
 FUNCTION	POL	drawing	POLY ;
 FUNCTION	CNT	drawing	CUT ;
 FUNCTION	ML1	drawing	ROUTING ;
@@ -43,7 +44,7 @@ FUNCTION	ML3	drawing	ROUTING ;
 //
 // Layer Connections.
 //
-CONNECT POL drawing BY cont drawing TO ML1 drawing ;
+CONNECT POL drawing BY CNT drawing TO ML1 drawing ;
 CONNECT ML1 drawing BY VIA1 drawing TO ML2 drawing ;
 CONNECT ML2 drawing BY VIA2 drawing TO ML3 drawing ;
 //
@@ -59,12 +60,13 @@ MINWIDTH NWL  drawing 4.0 ;
 MINSPACE NWL  drawing 4.0 ;
 MINAREA  NWL  drawing 16. ;
 MINENC   NWL  drawing DIFF drawing 2.0 ;
+MINENC   DM_PSUB  drawing DIFF drawing 2.0 ;
 //
 MINWIDTH DIFF drawing 1.0 ;
 MINSPACE DIFF drawing 1.5 ;
 MINAREA  DIFF drawing 1.0 ;
 // Check od extends beyond polyg
-MINEXT   DIF   drawing POL  drawing 1.0 ;
+MINEXT   DIFF   drawing POL  drawing 1.0 ;
 //
 MINWIDTH POL  drawing 1.0 ;
 MINSPACE POL  drawing 1.0 ;

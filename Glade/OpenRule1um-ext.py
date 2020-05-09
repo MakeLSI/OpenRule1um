@@ -110,8 +110,8 @@ saveInterconnect([
 # In this case we are using pcell devices which will be
 # created according to the recognition region polygon.
 print "# Extract MOS devices"
-extractMOS("nch", NMOS, POL, Ndiff, PSUB)
-extractMOS("pch", PMOS, POL, Pdiff, NWL)
+extractMOS("nchOR1ex", NMOS, POL, Ndiff, PSUB)
+extractMOS("pchOR1ex", PMOS, POL, Pdiff, NWL)
 
 # Extract resistors. Device terminal layers must exist in
 # extracted view as a result of saveInterconnect.

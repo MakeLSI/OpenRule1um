@@ -41,9 +41,9 @@ DM_via1 = geomGetShapes("DM_via1", "drawing")
 DM_via2 = geomGetShapes("DM_via2", "drawing")
 
 print "# Form derived layers"
-PSUB = geomNot(NWL); # psub
-#bkgnd     = geomBkgnd()
-#PSUB      = geomAndNot(bkgnd, NWL)
+#PSUB = geomNot(NWL); # psub
+bkgnd     = geomBkgnd()
+PSUB      = geomAndNot(bkgnd, NWL)
 
 GATE = geomAnd(POL, DIFF);
 Dif = geomAndNot(DIFF, GATE)
@@ -90,7 +90,8 @@ geomConnect( [
 print "# Save interconnect"
 saveInterconnect([
 		NWL,
-                PSUB,
+#                PSUB,
+                [PSUB, "DM_PSUB"],
 		DM_dcn,
 		DM_pcn,
 		DM_nscn,
@@ -110,8 +111,8 @@ saveInterconnect([
 # In this case we are using pcell devices which will be
 # created according to the recognition region polygon.
 print "# Extract MOS devices"
-extractMOS("nch", NMOS, POL, Ndiff, PSUB)
-extractMOS("pch", PMOS, POL, Pdiff, NWL)
+extractMOS("nchOR1ex", NMOS, POL, Ndiff, PSUB)
+extractMOS("pchOR1ex", PMOS, POL, Pdiff, NWL)
 
 # Extract resistors. Device terminal layers must exist in
 # extracted view as a result of saveInterconnect.
