@@ -17,7 +17,7 @@ print "# Get raw layers"
 NWL = geomGetShapes("NWL", "drawing")
 NWL_dp = geomGetShapes("NWL_dp", "drawing")
 DIFF = geomGetShapes("DIFF", "drawing")
-POL = geomGetShapes("POL", "drawing")
+POL_ = geomGetShapes("POL", "drawing")
 HPOL = geomGetShapes("HPOL", "drawing")
 CNT = geomGetShapes("CNT", "drawing")
 ML1 = geomGetShapes("ML1", "drawing")
@@ -39,6 +39,12 @@ DM_nscn = geomGetShapes("DM_nscn", "drawing")
 DM_pscn = geomGetShapes("DM_pscn", "drawing")
 DM_via1 = geomGetShapes("DM_via1", "drawing")
 DM_via2 = geomGetShapes("DM_via2", "drawing")
+
+if geomNumShapes(RES) > 0 :
+    pres = geomAnd(POL_, RES)
+    POL  = geomAndNot(POL_, RES)
+else :
+    POL = POL_
 
 print "# Form derived layers"
 PSUB = geomNot(NWL); # psub
@@ -63,14 +69,6 @@ geomLabel(ML3, "ML3", "drawing")
 
 print "# Form connectivity"
 geomConnect( [
-#        [DM_dcn, Pdiff, ML1],
-#        [DM_dcn, Ndiff, ML1],
-#        [DM_pcn, POL, ML1],
-#        [DM_nscn, NWL, ML1],
-#        [DM_nscn, NWL_dp, ML1],
-#        [DM_pscn, PSUB, ML1],
-#        [DM_via1, ML1, ML2],
-#        [DM_via2, ML2, ML3]
         [DM_dcn, Pdiff, ML1],
         [DM_dcn, Ndiff, ML1],
         [DM_pcn, POL, ML1],
@@ -80,6 +78,7 @@ geomConnect( [
         [DM_pscn, PSUB, ML1],
         [DM_via1, ML1, ML2],
         [DM_via2, ML2, ML3],
+        [CNT, POL, ML1], 
         [ptap, Pdiff, PSUB],
         [ntap, Ndiff, NWL]
 	     ] )
@@ -99,10 +98,13 @@ saveInterconnect([
 		DM_via2,
     		[Ndiff, "DIFF"],
 		[Pdiff, "DIFF"],
-		POL,
+		[POL, "POL"],
+                CNT,
 		ML1,
+                VIA1,
 		ML2,
-		ML3
+                VIA2,
+                ML3
 	     ] )
 
 # Extract MOS devices. Device terminal layers *must* exist in
@@ -115,9 +117,9 @@ extractMOS("pchOR1ex", PMOS, POL, Pdiff, NWL)
 
 # Extract resistors. Device terminal layers must exist in
 # extracted view as a result of saveInterconnect.
-#if geomNumShapes(rpo) > 0 :
-#	print "# Extract poly resistors"
-#	extractRes("rppoly_ex", pres, polyg)
+if geomNumShapes(RES) > 0 :
+	print "# Extract poly resistors"
+	extractRes("rpolyOR1_ex", pres, POL)
 
 # Extract MOS capacitors. Device terminal layers must exist in
 # extracted view as a result of saveInterconnect.
