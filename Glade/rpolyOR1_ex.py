@@ -35,7 +35,7 @@ def rpolyOR1_ex(cv, ptlist=[[0,0],[1000,0],[1000,1000],[0,1000]], l=1.0, w=1.0, 
 
 	# Now compute r
 	r = rsh * ((length / width) + (numBends * bendFactor))
-
+        print "r",r
 	# Update the master pcell property.
 	# NB dbAddProp will replace an existing property of same name.
 	cv.dbAddProp("r", r)
@@ -60,7 +60,9 @@ def rpolyOR1_ex(cv, ptlist=[[0,0],[1000,0],[1000,1000],[0,1000]], l=1.0, w=1.0, 
 	cv.dbAddProp("modelName", "rppoly")
 	
 	# Set the netlisting property
-	cv.dbAddProp("NLPDeviceFormat", "[@instName] [|A:%] [|B:%] [@modelName] [@w:w=%u] [@l:l=%u] [@r:r=%]")
+        #cv.dbAddProp("NLPDeviceFormat", "[@instName] [|A:%] [|B:%] [@modelName] [@w:w=%u] [@l:l=%u] [@r:r=%]")
+        # simply restance as arg
+	cv.dbAddProp("NLPDeviceFormat", "[@instName] [|A:%] [|B:%] [@r:%]")
 
 	# Device type
 	cv.dbAddProp("type", "res")
