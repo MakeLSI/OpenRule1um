@@ -5,6 +5,7 @@
 # ver1.20 : 2018/4/13:  akita11 akita@ifdl.jp (add rules based on rule v120)
 # ver1.30 : 2018/11/27: akita11 akita@ifdl.jp (add rules based for HPOL)
 # ver1.31 : 2018/11/28: akita11 akita@ifdl.jp (modified HPOL gap rule)
+# ver1.32 : 2020/05/20: akita11 akita@ifdl.jp (check DIFF outside Narea/Parea/DM_nscn/DM_pscn)
 
 # simpe function to print # errors - unused.
 def printErrors(msg) :
@@ -52,6 +53,10 @@ NMOS = geomAnd(Ndiff, POL); # nMOS channel
 PMOS = geomAnd(Pdiff, POL); # pMOS channel
 MOS = geomOr(NMOS, PMOS);
 HIPOL = geomAnd(HPOL, POL); # HighPolyResistor
+#Area = geomOr(DM_nscn, geomOr(DM_pscn, geomOr(Narea, Parea)));
+Area1 = geomOr(DM_pscn, DM_nscn);
+Area2 = geomOr(Narea, Parea);
+Area = geomOr(Area1, Area2);
 
 # Form connectivity
 geomConnect( [
@@ -164,6 +169,7 @@ geomArea(geomAnd(PSUB, DM_nscn), 0, 0, "nsubcon outside NWL") # not shown in rul
 geomEnclose(Parea, DIFF, 0.5, "DIFF enclosure in Parea < 0.5")
 geomEnclose(Narea, DIFF, 0.5, "DIFF enclosure in Narea < 0.5")
 geomEnclose(HPOL, HIPOL, 5.0, "POL enclosure in HPOL < 5.0")
+geomAreaIn(geomAndNot(DIFF, Area), 0, 9e99, 'DIFF not enclosed by Parea/Narea/DM_pscn/DMnscn')
 
 print "Check MOS gate extension"
 geomExtension(POL, DIFF, 1, "POL gate extension < 1.0")
