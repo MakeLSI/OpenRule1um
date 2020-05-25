@@ -6,6 +6,7 @@
 # ver1.30 : 2018/11/27: akita11 akita@ifdl.jp (add rules based for HPOL)
 # ver1.31 : 2018/11/28: akita11 akita@ifdl.jp (modified HPOL gap rule)
 # ver1.32 : 2020/05/20: akita11 akita@ifdl.jp (check DIFF outside Narea/Parea/DM_nscn/DM_pscn)
+# ver1.33 : 2020/05/25: akita11 akita@ifdl.jp (check offgrid)
 
 # simpe function to print # errors - unused.
 def printErrors(msg) :
@@ -177,7 +178,7 @@ geomEnclose(HPOL, HIPOL, 5.0, "POL enclosure in HPOL < 5.0")
 
 # for checking diff enclosure for psubcont with Parea in psubcont
 bad_active = geomAndNot(DIFF, geomContains(Area, DIFF))
-saveDerived(bad_active, 'DIFF not enclosed by Narea')
+saveDerived(bad_active, 'DIFF not enclosed by P/Narea')
 
 print "Check MOS gate extension"
 geomExtension(POL, DIFF, 1, "POL gate extension < 1.0")
@@ -192,6 +193,24 @@ SAvia1 = geomAnd(VIA1, geomNot(DM_via1))
 geomArea(SAvia1, 0, 0, "Stand alone VIA1")
 SAvia2 = geomAnd(VIA2, geomNot(DM_via2))
 geomArea(SAvia2, 0, 0, "Stand alone VIA2")
+
+print "Check offgrid"
+geomOffGrid(NWL, 0.5, 0.1, "NWL offgrid")
+geomOffGrid(NWL_dp, 0.5, 0.1, "NWL_dp offgrid")
+geomOffGrid(POL, 0.5, 0.1, "POL offgrid")
+geomOffGrid(HPOL, 0.5, 0.1, "HPOL offgrid")
+geomOffGrid(DM_dcn, 0.5, 0.1, "DM_dcn offgrid")
+geomOffGrid(DM_pcn, 0.5, 0.1, "DM_pcn offgrid")
+geomOffGrid(DM_pscn, 0.5, 0.1, "DM_pscn offgrid")
+geomOffGrid(DM_nscn, 0.5, 0.1, "DM_nscn offgrid")
+geomOffGrid(DM_via1, 0.5, 0.1, "DM_via1 offgrid")
+geomOffGrid(DM_via2, 0.5, 0.1, "DM_via2 offgrid")
+geomOffGrid(ML1, 0.5, 0.1, "ML1 offgrid")
+geomOffGrid(ML2, 0.5, 0.1, "ML2 offgrid")
+geomOffGrid(ML3, 0.5, 0.1, "ML3 offgrid")
+geomOffGrid(RES, 0.5, 0.1, "RES offgrid")
+geomOffGrid(Parea, 0.5, 0.1, "Parea offgrid")
+geomOffGrid(Narea, 0.5, 0.1, "Narea offgrid")
 
 # Exit DRC package, freeing memory
 geomEnd()
