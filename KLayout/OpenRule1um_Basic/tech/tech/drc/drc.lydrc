@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category>drc</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name>drc_scripts</group-name>
+ <menu-path>tools_menu.drc.end</menu-path>
+ <interpreter>dsl</interpreter>
+ <dsl-interpreter-name>drc-dsl-xml</dsl-interpreter-name>
+ <text>## 1um Standard Rule DRC
+## ver1.00 : 2018/2/10:  akita11 akita@ifdl.jp
+## ver1.01 : 2018/2/23:  akita11 akita@ifdl.jp (bug fix)
+## ver1.10 : 2018/3/17:  akita11 akita@ifdl.jp (add rules based on rule v110)
+## ver1.20 : 2018/4/13:  akita11 akita@ifdl.jp (add rules based on rule v120)
+## ver1.30 : 2018/11/27: akita11 akita@ifdl.jp (add rules based for HPOL)
+## ver1.31 : 2018/11/28: akita11 akita@ifdl.jp (modified HPOL gap rule)
+# klayout drc rule v0.4: 2019/10/08: seijiro.moriyama@anagix.com
+report("Output database")
+
+# simpe function to print # errors - unused.
+=begin
+def printErrors(msg) :
+	n = geomGetCount()
+	if n &gt; 0 :
+		print n, msg
+
+=end
+# Initialise DRC package. 
+=begin
+from ui import *
+cv = ui().getEditCellView()
+geomBegin(cv)
+
+=end
+# Get raw layers
+nwl = input(1, 0)
+nwl_dp = input(2, 0)
+diff = input(3, 0) 
+pol = input(5, 0)
+hpol = input(6,0)
+cnt = input(7, 0)
+ml1 = input(8, 0)
+via1 = input(9, 0) 
+ml2 = input(10, 0)
+via2 = input(11, 0)
+ml3 = input(12, 0)
+text = input(13, 0)
+frame = input(14, 0)
+res = input(15, 0)
+cap = input(16, 0)
+dio = input(17, 0)
+parea = input(18, 0)
+narea = input(19, 0)
+pad = input(20, 0)
+dm_dcn = input(101, 0)
+dm_pcn = input(102, 0)
+dm_nscn = input(103, 0)
+dm_pscn = input(104, 0)
+dm_via1 = input(105, 0)
+dm_via2 = input(106, 0)
+=begin
+NWL = geomGetShapes("NWL", "drawing")
+NWL_dp = geomGetShapes("NWL_dp", "drawing")
+DIFF = geomGetShapes("DIFF", "drawing")
+POL = geomGetShapes("POL", "drawing")
+HPOL = geomGetShapes("HPOL", "drawing")
+CNT = geomGetShapes("CNT", "drawing")
+ML1 = geomGetShapes("ML1", "drawing")
+VIA1 = geomGetShapes("VIA1", "drawing")
+ML2 = geomGetShapes("ML2", "drawing")
+VIA2 = geomGetShapes("VIA2", "drawing")
+ML3 = geomGetShapes("ML3", "drawing")
+TEXT = geomGetShapes("TEXT", "drawing")
+FRAME = geomGetShapes("FRAME", "drawing")
+RES = geomGetShapes("RES", "drawing")
+CAP = geomGetShapes("CAP", "drawing")
+DIO = geomGetShapes("DIO", "drawing")
+Parea = geomGetShapes("Parea", "drawing")
+Narea = geomGetShapes("Narea", "drawing")
+PAD = geomGetShapes("PAD", "drawing")
+DM_dcn = geomGetShapes("DM_dcn", "drawing")
+DM_pcn = geomGetShapes("DM_pcn", "drawing")
+DM_nscn = geomGetShapes("DM_nscn", "drawing")
+DM_pscn = geomGetShapes("DM_pscn", "drawing")
+DM_via1 = geomGetShapes("DM_via1", "drawing")
+DM_via2 = geomGetShapes("DM_via2", "drawing")
+
+=end
+## Form derived layers
+#PSUB = geomNot(NWL); # psub
+# Ndiff = geomAnd(DIFF, Narea); =&gt;
+ndiff = diff &amp; narea
+# Pdiff = geomAnd(DIFF, Parea); =&gt;
+pdiff = diff &amp; parea
+# NMOS = geomAnd(Ndiff, POL); # nMOS channel =&gt;
+nmos = ndiff &amp; pol
+# PMOS = geomAnd(Pdiff, POL); # pMOS channel =&gt;
+pmos = pdiff &amp; pol
+# MOS = geomOr(NMOS, PMOS); =&gt;
+mos = nmos | pmos
+# HIPOL = geomAnd(HPOL, POL); # HighPolyResistor =&gt;
+hipol = hpol &amp; pol
+
+# Form connectivity
+=begin
+geomConnect( [
+        [DM_dcn, Pdiff, ML1],
+        [DM_dcn, Ndiff, ML1],
+        [DM_nscn, NWL, ML1],
+        [DM_nscn, NWL_dp, ML1],
+        [DM_pscn, PSUB, ML1],
+        [DM_via1, ML1, ML2],
+        [DM_via2, ML2, ML3]
+	     ] )
+
+=end
+puts 'Check GAP'
+# geomSpace(NWL, 4, "NWL space &lt; 4.0") =&gt;
+r_nwl_s = nwl.space(4.um); r_nwl_s.output("NWL space &lt; 4.0")
+# geomSpace(NWL_dp, 5, "NWL(diff.pot) space &lt; 5.0") =&gt;
+r_nwl_dp_s = nwl_dp.space(5.um); r_nwl_dp_s.output("NWL(diff.pot) space &lt; 5.0")
+# geomSpace(Parea, 0.5, "Parea space &lt; 0.5") =&gt;
+r_parea_s = parea.space(0.5.um); r_parea_s.output("Parea space &lt; 0.5")
+# geomSpace(Narea, 0.5, "Narea space &lt; 0.5") =&gt;
+r_narea_s = narea.space(0.5.um); r_narea_s.output("Narea space &lt; 0.5")
+# geomSpace(Parea, Narea, 0.5, "Parea-Narea space &lt; 0.5") =&gt;
+r_parea_narea_s = parea.separation(narea.not_interacting(parea), 0.5.um); r_parea_narea_s.output("Parea-Narea space &lt; 0.5")
+# geomSpace(DIFF, 1.5, "DIFF space &lt; 1.5") =&gt;
+r_diff_s = diff.space(1.5.um); r_diff_s.output("DIFF space &lt; 1.5")
+# geomSpace(NWL, Ndiff, 3,  "NWL-Ndiff space &lt; 3.0") =&gt;
+r_nwl_ndiff_s = nwl.separation(ndiff.not_interacting(nwl), 3.um); r_nwl_ndiff_s.output("NWL-Ndiff space &lt; 3.0")
+# geomSpace(Pdiff, DM_nscn, 0.5, "Pdiff-NScont space &lt; 0.5") =&gt;
+r_pdiff_dm_nscn_s = pdiff.separation(dm_nscn.not_interacting(pdiff), 0.5.um); r_pdiff_dm_nscn_s.output("Pdiff-NScont space &lt; 0.5")
+# geomSpace(Ndiff, DM_pscn, 1.0, "Ndiff-PScont space &lt; 1.0") =&gt;
+r_ndiff_dm_pscn_s = ndiff.separation(dm_pscn.not_interacting(ndiff), 1.0.um); r_ndiff_dm_pscn_s.output("Ndiff-PScont space &lt; 1.0")
+# geomSpace(POL, 1.0, "POL space &lt; 1.0") =&gt;
+r_pol_s = pol.space(1.0.um); r_pol_s.output("POL space &lt; 1.0")
+# geomSpace(MOS, 1, " POL(MOS) space &lt; 1.0") =&gt;
+r_mos_s = mos.space(1.um); r_mos_s.output(" POL(MOS) space &lt; 1.0")
+# geomSpace(POL, DIFF, 0.5, "POL-diff space &lt; 0.5") =&gt;
+r_pol_diff_s = pol.separation(diff.not_interacting(pol), 0.5.um); r_pol_diff_s.output("POL-diff space &lt; 0.5")
+# geomSpace(DIFF, DM_dcn, 1, "Diff-dcont space &lt; 1.0") =&gt;
+r_diff_dm_dcn_s = diff.separation(dm_dcn.not_interacting(diff), 1.um); r_diff_dm_dcn_s.output("Diff-dcont space &lt; 1.0")
+# geomSpace(MOS, DM_dcn, 0.5, "MOS-dcont space &lt; 0.5") =&gt;
+r_mos_dm_dcn_s = mos.separation(dm_dcn.not_interacting(mos), 0.5.um); r_mos_dm_dcn_s.output("MOS-dcont space &lt; 0.5")
+# geomSpace(DIFF, DM_pcn, 1.0, "Diff-pcont space &lt; 1.5") =&gt;
+r_diff_dm_pcn_s = diff.separation(dm_pcn.not_interacting(diff), 1.0.um); r_diff_dm_pcn_s.output("Diff-pcont space &lt; 1.5")
+# geomSpace(POL, DM_pcn, 0.5, "POL-pcont space &lt; 0.5, may be pseudo-error (can be ignored)") =&gt;
+r_pol_dm_pcn_s = pol.separation(dm_pcn.not_interacting(pol), 0.5.um); r_pol_dm_pcn_s.output("POL-pcont space &lt; 0.5, may be pseudo-error (can be ignored)")
+# geomSpace(ML1, 1, "ML1 space &lt; 1.0") =&gt;
+r_ml1_s = ml1.space(1.um); r_ml1_s.output("ML1 space &lt; 1.0")
+# geomSpace(ML2, 1, "ML2 space &lt; 1.0") =&gt;
+r_ml2_s = ml2.space(1.um); r_ml2_s.output("ML2 space &lt; 1.0")
+# geomSpace(ML3, 1, "ML3 space &lt; 1.0") =&gt;
+r_ml3_s = ml3.space(1.um); r_ml3_s.output("ML3 space &lt; 1.0")
+# geomSpace(ML1, DM_dcn, 0.5, "ML1-dcont space &lt; 0.5, may be pseudo-error (can be ignored)") =&gt;
+r_ml1_dm_dcn_s = ml1.separation(dm_dcn.not_interacting(ml1), 0.5.um); r_ml1_dm_dcn_s.output("ML1-dcont space &lt; 0.5, may be pseudo-error (can be ignored)")
+# geomSpace(ML1, DM_pcn, 0.5, "ML1-pcont space &lt; 0.5, may be pseudo-error (can be ignored)") =&gt;
+r_ml1_dm_pcn_s = ml1.separation(dm_pcn.not_interacting(ml1), 0.5.um); r_ml1_dm_pcn_s.output("ML1-pcont space &lt; 0.5, may be pseudo-error (can be ignored)")
+# geomSpace(DM_via1, 0.5, "via1 space &lt; 0.5") =&gt;
+r_dm_via1_s = dm_via1.space(0.5.um); r_dm_via1_s.output("via1 space &lt; 0.5")
+# geomSpace(DM_via2, 0.5, "via2 space &lt; 0.5") =&gt;
+r_dm_via2_s = dm_via2.space(0.5.um); r_dm_via2_s.output("via2 space &lt; 0.5")
+##geomSpace(ML1, DM_nscn, 1, "ML1-nsubcont space &lt; 1.0")
+##geomSpace(ML1, DM_pscn, 1, "ML1-psubcont space &lt; 1.0")
+# geomSpace(ML1, DM_via1, 0.5, "ML1-via1 space &lt; 0.5") =&gt;
+r_ml1_dm_via1_s = ml1.separation(dm_via1.not_interacting(ml1), 0.5.um); r_ml1_dm_via1_s.output("ML1-via1 space &lt; 0.5")
+# geomSpace(ML2, DM_via1, 0.5, "ML2-via1 space &lt; 0.5") =&gt;
+r_ml2_dm_via1_s = ml2.separation(dm_via1.not_interacting(ml2), 0.5.um); r_ml2_dm_via1_s.output("ML2-via1 space &lt; 0.5")
+# geomSpace(ML2, DM_via2, 0.5, "ML2-via2 space &lt; 0.5") =&gt;
+r_ml2_dm_via2_s = ml2.separation(dm_via2.not_interacting(ml2), 0.5.um); r_ml2_dm_via2_s.output("ML2-via2 space &lt; 0.5")
+# geomSpace(ML3, DM_via2, 0.5, "ML3-via2 space &lt; 0.5") =&gt;
+r_ml3_dm_via2_s = ml3.separation(dm_via2.not_interacting(ml3), 0.5.um); r_ml3_dm_via2_s.output("ML3-via2 space &lt; 0.5")
+# geomSpace(DM_via1, DM_dcn, 0.5, "via1-dcont space &lt; 0.5") =&gt;
+r_dm_via1_dm_dcn_s = dm_via1.separation(dm_dcn.not_interacting(dm_via1), 0.5.um); r_dm_via1_dm_dcn_s.output("via1-dcont space &lt; 0.5")
+# geomSpace(DM_via1, DM_pcn, 0.5, "via1-pcont space &lt; 0.5") =&gt;
+r_dm_via1_dm_pcn_s = dm_via1.separation(dm_pcn.not_interacting(dm_via1), 0.5.um); r_dm_via1_dm_pcn_s.output("via1-pcont space &lt; 0.5")
+# geomSpace(DM_via1, DM_nscn, 0.5, "via1-nscont space &lt; 0.5") =&gt;
+r_dm_via1_dm_nscn_s = dm_via1.separation(dm_nscn.not_interacting(dm_via1), 0.5.um); r_dm_via1_dm_nscn_s.output("via1-nscont space &lt; 0.5")
+# geomSpace(DM_via1, DM_pscn, 0.5, "via1-pscont space &lt; 0.5") =&gt;
+r_dm_via1_dm_pscn_s = dm_via1.separation(dm_pscn.not_interacting(dm_via1), 0.5.um); r_dm_via1_dm_pscn_s.output("via1-pscont space &lt; 0.5")
+# geomSpace(DM_via1, DM_via2, 0.5, "via1-via2 space &lt; 0.5") =&gt;
+r_dm_via1_dm_via2_s = dm_via1.separation(dm_via2.not_interacting(dm_via1), 0.5.um); r_dm_via1_dm_via2_s.output("via1-via2 space &lt; 0.5")
+# geomSpace(DM_dcn, 1.0, "dcont space &lt; 1.0") =&gt;
+r_dm_dcn_s = dm_dcn.space(1.0.um); r_dm_dcn_s.output("dcont space &lt; 1.0")
+##geomSpace(HIPOL, 1.0, "Poly in HPOL space &lt; 1.0")
+# geomSpace(HIPOL, 2.0, "Poly in HPOL space &lt; 2.0") =&gt;
+r_hipol_s = hipol.space(2.0.um); r_hipol_s.output("Poly in HPOL space &lt; 2.0")
+# geomSpace(POL, HIPOL, 1.0, "Poly outside HPOL space &lt; 1.0") =&gt;
+r_pol_hipol_s = pol.separation(hipol.not_interacting(pol), 1.0.um); r_pol_hipol_s.output("Poly outside HPOL space &lt; 1.0")
+r_hpol_mos_s = hpol.separation(mos, 3.0.um); r_hpol_mos_s.output("HPOL MOS gate space &lt; 3.0")
+
+puts 'Check Overlap'
+=begin
+DM_dcn_r = geomGetRawShapes("DM_dcn", "drawing")
+DM_dcn_r_ovlp = geomAnd(DM_dcn_r)
+geomArea(DM_dcn_r_ovlp, 0, 16, "dcont overlap") # check partial overlap
+=end
+
+=begin
+DM_pcn_r = geomGetRawShapes("DM_pcn", "drawing")
+DM_pcn_r_ovlp = geomAnd(DM_pcn_r)
+geomArea(DM_pcn_r_ovlp, 0, 16, "pcont overlap") # check partial overlap
+=end
+
+=begin
+DM_nscn_r = geomGetRawShapes("DM_nscn", "drawing")
+DM_nscn_r_ovlp = geomAnd(DM_nscn_r)
+geomArea(DM_nscn_r_ovlp, 0, 0, "nsubcont overlap")
+=end
+dm_nscn_ovlp = dm_nscn.raw.merged(2); dm_nscn_ovlp.output("nsubcont overlap")
+
+=begin
+DM_pscn_r = geomGetRawShapes("DM_pscn", "drawing")
+DM_pscn_r_ovlp = geomAnd(DM_pscn_r)
+geomArea(DM_pscn_r_ovlp, 0, 16, "psubcont overlap") # check partial overlap
+=end
+
+=begin
+DM_via1_r = geomGetRawShapes("DM_via1", "drawing")
+DM_via1_r_ovlp = geomAnd(DM_via1_r)
+geomArea(DM_via1_r_ovlp, 0, 16, "via1 overlap") # check partial overlap
+=end
+
+=begin
+DM_via2_r = geomGetRawShapes("DM_via2", "drawing")
+DM_via2_r_ovlp = geomAnd(DM_via2_r)
+geomArea(DM_via2_r_ovlp, 0, 16, "via2 overlap") # check partial overlap
+=end
+
+# DM_dcn_MOS = geomAnd(DM_dcn, MOS) =&gt;
+dm_dcn_mos = dm_dcn &amp; mos
+# geomArea(DM_dcn_MOS, 0, 0, "dcn-MOS overlap") =&gt;
+dm_dcn_mos.output("dcn-MOS overlap")
+
+##DM_via1_via2 = geomAnd(DM_via1, DM_via2)
+##geomArea(DM_via1_via2, 0, 0, "via1-via2 overlap")
+##DM_via1_dcont = geomAnd(DM_via1, DM_dcn)
+##geomArea(DM_via1_via2, 0, 0, "via1-dcont overlap")
+##DM_via1_pcont = geomAnd(DM_via1, DM_pcn)
+##geomArea(DM_via1_via2, 0, 0, "via1-pcont overlap")
+
+puts 'Check Stacked Con/Via'
+# geomArea(geomAnd(DM_pcn, DM_via1), 4, 4, "pcont-via1 non-stack") =&gt;
+dm_pcn_ns = dm_pcn.and(dm_via1).not_in(dm_via1); dm_pcn_ns.output("pcont-via1 non-stack")
+# geomArea(geomAnd(DM_dcn, DM_via1), 4, 4, "dcont-via1 non-stack") =&gt;
+dm_dcn_ns = dm_dcn.and(dm_via1).not_in(dm_via1); dm_dcn_ns.output("dcont-via1 non-stack")
+# geomArea(geomAnd(DM_via1, DM_via2), 4, 4, "via1-via2 non-stack") =&gt;
+dm_via1_ns = dm_via1.and(dm_via2).not_in(dm_via2); dm_via1_ns.output("via1-via2 non-stack")
+
+puts 'Check Width'
+# geomWidth(NWL,  4, "NWL width &lt; 4.0") =&gt;
+nwl_w = nwl.width(4.um); nwl_w.output("NWL width &lt; 4.0")
+# geomWidth(NWL_dp, 4, "NWL(diff.pot) width &lt; 4.0") =&gt;
+nwl_dp_w = nwl_dp.width(4.um); nwl_dp_w.output("NWL(diff.pot) width &lt; 4.0")
+# geomWidth(Parea,  0.5, "Parea width &lt; 0.5") =&gt;
+parea_w = parea.width(0.5.um); parea_w.output("Parea width &lt; 0.5")
+# geomWidth(Narea,  0.5, "Narea width &lt; 0.5") =&gt;
+narea_w = narea.width(0.5.um); narea_w.output("Narea width &lt; 0.5")
+# geomWidth(DIFF,  1.0, "DIFF width &lt; 1.0") =&gt;
+diff_w = diff.width(1.0.um); diff_w.output("DIFF width &lt; 1.0")
+# geomWidth(POL,  1, "POL width &lt; 1.0") =&gt;
+pol_w = pol.width(1.um); pol_w.output("POL width &lt; 1.0")
+# geomWidth(ML1, 1, "ML1 width &lt; 1.0") =&gt;
+ml1_w = ml1.width(1.um); ml1_w.output("ML1 width &lt; 1.0")
+# geomWidth(ML2, 1, "ML2 width &lt; 1.0") =&gt;
+ml2_w = ml2.width(1.um); ml2_w.output("ML2 width &lt; 1.0")
+# geomWidth(ML3, 1, "ML3 width &lt; 1.0") =&gt;
+ml3_w = ml3.width(1.um); ml3_w.output("ML3 width &lt; 1.0")
+# geomWidth(HIPOL, 2.0, "Poly in HPOL width &lt; 2.0") =&gt;
+hipol_w = hipol.width(2.0.um); hipol_w.output("Poly in HPOL width &lt; 2.0")
+
+### ToDo: check HIPOL length (20-80um) (181127:akita11)
+
+puts 'Check Enclose'
+# geomEnclose(NWL, Pdiff, 2, "Pdiff enclosure in NWL &lt; 2.0") =&gt;
+nwl_e = nwl.enclosing(pdiff, 2.um); nwl_e.output("Pdiff enclosure in NWL &lt; 2.0")
+# geomArea(geomAnd(PSUB, DM_nscn), 0, 0, "nsubcon outside NWL") # not shown in rule v110 =&gt;
+nsubcon_o = dm_nscn.not_inside(nwl); nsubcon_o.output("nsubcon outside NWL")
+# geomEnclose(Parea, DIFF, 0.5, "DIFF enclosure in Parea &lt; 0.5") =&gt;
+parea_e = parea.enclosing(diff, 0.5.um); parea_e.output("DIFF enclosure in Parea &lt; 0.5")
+# geomEnclose(Narea, DIFF, 0.5, "DIFF enclosure in Narea &lt; 0.5") =&gt;
+narea_e = narea.enclosing(diff, 0.5.um); narea_e.output("DIFF enclosure in Narea &lt; 0.5")
+# geomEnclose(HPOL, HIPOL, 5.0, "POL enclosure in HPOL &lt; 5.0") =&gt;
+hpol_e = hpol.enclosing(hipol, 5.0.um); hpol_e.output("POL enclosure in HPOL &lt; 5.0")
+
+puts 'Check MOS gate extension'
+# geomExtension(POL, DIFF, 1, "POL gate extension &lt; 1.0") =&gt;
+pol_x = pol.not(diff)
+pol_x_w = pol_x.width(1.um); pol_x_w.output("POL gate extension &lt; 1.0")
+
+puts 'Check stand-alone Cont/Via'
+# DMcnt1 = geomOr(DM_dcn, DM_pcn) =&gt;
+dmcnt1 = dm_dcn | dm_pcn
+# DMcnt2 = geomOr(DMcnt1, DM_nscn) =&gt;
+dmcnt2 = dmcnt1 | dm_nscn
+# DMcnt = geomOr(DMcnt2, DM_pscn) =&gt;
+dmcnt = dmcnt2 | dm_pscn
+# SAcnt = geomAnd(CNT, geomNot(DMcnt)) =&gt;
+sacnt = cnt.outside(dmcnt)
+# geomArea(SAcnt, 0, 0, "Stand alone Cont") =&gt;
+sacnt.output("Stand alone Cont")
+# SAvia1 = geomAnd(VIA1, geomNot(DM_via1)) =&gt;
+savia1 = via1.outside(dm_via1)
+# geomArea(SAvia1, 0, 0, "Stand alone VIA1") =&gt;
+savia1.output("Stand alone VIA1")
+# SAvia2 = geomAnd(VIA2, geomNot(DM_via2)) =&gt;
+savia2 = via2.outside(dm_via2)
+# geomArea(SAvia2, 0, 0, "Stand alone VIA2") =&gt;
+savia2.output("Stand alone VIA2")
+
+# Exit DRC package, freeing memory
+=begin
+geomEnd()
+#ui().winFit()
+=end
+#Finished
+</text>
+</klayout-macro>

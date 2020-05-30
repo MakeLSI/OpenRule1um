@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>module MyMacro
+ 
+  include RBA
+  # create a new view (mode 1) with an empty layout
+  main_window = Application::instance.main_window
+  layout = main_window.create_layout(1).layout
+  layout_view = main_window.current_view
+
+# set the database unit (shown as an example, the default is 0.001)
+  layout.dbu = 0.001
+
+# create a cell
+  cell = layout.create_cell("TOP")
+
+# create a layer
+  layer_index = layout.insert_layer(LayerInfo::new(8, 0))
+
+# add a shape
+  cell.shapes(layer_index).insert(Box::new(0, 0, 2000, 2000))
+  
+  lib = Library::library_by_name('OpenRule1um')
+  # layout.add_lib_cell(library, layout.cell_by_name('OpenRule1um.Via'))
+  cell_index = lib.layout.cell_by_name('Via') 
+  proxy_index = layout.add_lib_cell(lib, cell_index)
+ # via = CellInstArray.new(proxy_index, Trans.new(-100/layout.dbu, 0/layout.dbu))
+  via = CellInstArray.new(proxy_index, Trans.new((-1.500/layout.dbu).to_i,(-0.500/layout.dbu).to_i))
+  inst = cell.insert(via)
+
+# select the top cell in the view, set up the view's layer list and
+# fit the viewport to the extensions of our layout
+  layout_view.select_cell(cell.cell_index, 0)
+  layout_view.add_missing_layers
+  layout_view.max_hier
+  layout_view.zoom_fit
+
+  # Enter your Ruby code here ..
+
+end
+
+</text>
+</klayout-macro>

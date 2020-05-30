@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>include RBA
+def library_cell name, libname, layout
+  if cell = layout.cell(name)
+    return cell.cell_index
+  else
+    lib = Library::library_by_name libname
+    cell_index = lib.layout.cell_by_name(name)
+    proxy_index = layout.add_lib_cell(lib, cell_index)
+  end
+end
+def instantiate index, x, y, cell
+  CellInstArray.new(index, Trans.new(x, y))
+end
+
+module MyMacro
+ 
+  include RBA
+  # create a new view (mode 1) with an empty layout
+  main_window = Application::instance.main_window
+  layout = main_window.create_layout(1).layout
+  layout_view = main_window.current_view
+
+# set the database unit (shown as an example, the default is 0.001)
+  layout.dbu = 0.001
+  
+  resistor_width = 2.um
+  resistor_length = 5.um
+  via_size = 2.um
+  
+  w = (resistor_width/layout.dbu).to_i
+  l = (resistor_length/layout.dbu).to_i
+  s = (via_size/layout.dbu).to_i
+
+# create a cell
+  cell = layout.create_cell("TOP")
+
+# create a layer
+  layer_index = layout.insert_layer(LayerInfo::new(6, 0))
+
+# add a shape
+  points = [Point::new(s/2, s), Point::new(s/2, s+l)]
+  cell.shapes(layer_index).insert(Path::new(points, w, s, s))
+ 
+  via_index = library_cell('Via', 'OpenRule1um', layout)
+  pcont_index = library_cell('pcont', 'OpenRule1um', layout)
+  [[s/2, s/2], [s/2, l+s+s/2]].each{|x, y|
+    via = instantiate via_index, x, y, cell
+    inst = cell.insert(via)
+    pcont = instantiate pcont_index, x, y, cell
+    inst = cell.insert(pcont)
+  }
+
+# select the top cell in the view, set up the view's layer list and
+# fit the viewport to the extensions of our layout
+  layout_view.select_cell(cell.cell_index, 0)
+  layout_view.add_missing_layers
+  layout_view.max_hier
+  layout_view.zoom_fit
+
+  # Enter your Ruby code here ..
+
+end
+</text>
+</klayout-macro>

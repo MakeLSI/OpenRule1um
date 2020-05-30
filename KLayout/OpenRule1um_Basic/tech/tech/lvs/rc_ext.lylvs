@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category>lvs</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name>lvs_scripts</group-name>
+ <menu-path>tools_menu.lvs.end</menu-path>
+ <interpreter>dsl</interpreter>
+ <dsl-interpreter-name>lvs-dsl-xml</dsl-interpreter-name>
+ <text># OpenRule1um lvs rule for Analog v1.12 Apr. 6, 2020 copy left by S. Moriyama (Anagix Corporation)
+deep
+report_lvs
+
+# Drawing layers
+
+nwl = input(1, 0)
+nwl_dp = input(2, 0)
+diff = input(3, 0) 
+pol = input(5, 0)
+hpol = input(6,0)
+cnt = input(7, 0)
+ml1 = input(8, 0)
+via1 = input(9, 0) 
+ml2 = input(10, 0)
+via12 = input(11, 0)
+ml3 = input(12, 0)
+text = input(13, 0)
+frame = input(14, 0)
+res = input(15, 0)
+cap = input(16, 0)
+dio = input(17, 0)
+parea = input(18, 0)
+narea = input(19, 0)
+pad = input(20, 0)
+dm_dcn = input(101, 0)
+dm_pcn = input(102, 0)
+dm_nscn = input(103, 0)
+dm_pscn = input(104, 0)
+dm_via11 = input(105, 0)
+dm_via12 = input(106, 0)
+
+# Special layer for bulk terminals
+
+bulk        = polygon_layer
+
+# Computed layers
+pol_not_res  = pol - res
+pol_in_res   = pol &amp; res
+
+hpol_not_res  = hpol - res
+hpol_in_res   = hpol &amp; res
+
+cnt_in_cap = cnt &amp; cap
+pol_overlapping_cap = pol.overlapping(cap) - pol.inside(cap)
+
+#diff_in_cap = diff &amp; cap
+#diff_not_cap = diff - cap
+
+diff_in_nwl = diff &amp; nwl
+pdiff       = diff_in_nwl - narea
+#pdiff       = diff_in_nwl &amp; parea
+pgate       = pdiff &amp; pol_not_res
+psd         = pdiff - pgate
+ntie        = diff_in_nwl &amp; narea
+# hv_pgate    = pgate &amp; thickox
+# lv_pgate    = pgate - hv_pgate
+lv_pgate = pgate
+# hv_psd      = psd &amp; thickox
+# lv_psd      = psd - thickox
+
+diff_outside_nwl = diff - nwl
+ndiff      = diff_outside_nwl - parea
+#ndiff      = diff_outside_nwl &amp; narea
+ngate      = ndiff &amp; pol_not_res 
+nsd        = ndiff - ngate
+ptie       = diff_outside_nwl &amp; dm_pscn #&amp; parea
+# hv_ngate   = ngate &amp; thickox
+# lv_ngate   = ngate - hv_ngate
+lv_ngate = ngate
+# hv_nsd     = nsd &amp; thickox
+# lv_nsd     = nsd - thickox
+
+# Device extraction  
+# Capacitor extraction
+area_cap = 1.72e-15
+model_name = 'CAP'
+extract_devices(capacitor(model_name, area_cap), {'P1'=&gt;pol_overlapping_cap, 'P2'=&gt; cap})                         
+# resistance extraction
+
+model_name = "D"
+pplus = (diff_in_nwl &amp; parea )  - (pgate + psd)
+extract_devices(diode(model_name), { "P" =&gt; pplus, "N" =&gt; nwl , 'tA' =&gt; cnt,  'tC' =&gt; cnt})
+
+sheet_rho = 20.0
+model_name = "RES"
+bbox = (res | cnt).extents
+cap_layer = bbox - res
+extract_devices(resistor(model_name, sheet_rho), {"R" =&gt;  pol_in_res, "C" =&gt; cap_layer,
+                                                                'tA' =&gt; pol_not_res, 'tB'=&gt;pol_not_res  })# &amp; pol &amp; via1 &amp; ml1})
+sheet_rho = 7000.0
+model_name = "HRES"
+bbox = (res | cnt).extents
+cap_layer = bbox - res
+extract_devices(resistor(model_name, sheet_rho), {"R" =&gt;  hpol_in_res, "C" =&gt;cap_layer,  'tA' =&gt; hpol_not_res, 'tB'=&gt;hpol_not_res  })
+
+# PMOS transistor device extraction
+extract_devices(mos4("PMOS"), { "SD" =&gt; psd, "G" =&gt; lv_pgate, "W" =&gt; nwl, 
+                                "tS" =&gt; psd, "tD" =&gt; psd, "tG" =&gt;pol_not_res, "tW" =&gt; nwl })
+# NMOS transistor device extraction
+extract_devices(mos4("NMOS"), { "SD" =&gt; nsd, "G" =&gt; lv_ngate, "W" =&gt; bulk, 
+                                "tS" =&gt; nsd, "tD" =&gt; nsd, "tG" =&gt;pol_not_res, "tW" =&gt; bulk })
+
+# Define connectivity for netlist extraction
+
+# Inter-layer
+connect(psd,     cnt)
+connect(nsd,     cnt)
+connect(pol,    cnt)
+connect(pol_not_res, cnt)
+connect(hpol_not_res, cnt)
+connect(pol_overlapping_cap, cnt)
+connect(cap, cnt)
+
+connect(cnt, ntie)
+connect(nwl,   ntie)
+connect(cnt, ptie)
+connect(cnt, ml1)
+connect(ml1,  via1)
+connect(via1,     ml2)
+
+# Global connections
+connect_global(ptie, "SUBSTRATE")
+connect_global(bulk, "SUBSTRATE")
+
+ext_name = File.extname source.path
+target = File.basename(source.path).sub(ext_name, '')
+reference = "#{target}_reference.cir"
+
+if File.exist? target+'.yaml'
+  require 'yaml'
+  ref = YAML.load File.read(target+'.yaml')
+  if File.mtime(ref['netlist']) &lt; File.mtime(ref['schematic']) 
+    raise "netlist file '#{ref['netlist']}' is outdated!\nPlease update netlist and run get_reference again!"
+  end
+  if File.mtime(reference) &lt; File.mtime(ref['netlist']) 
+    raise "Please run get_reference because netlist file '#{ref['netlist']}'is modified"
+  end
+  end
+output = "#{target}_output.cir"
+
+schematic reference if File.exist? reference
+# -------------------------------------------------------------------
+# Netlist and compare
+
+# Netlist normalization
+#netlist.simplify
+netlist.purge
+# Hierarchy alignment (flatten out unmatched cells)
+
+#schematic.combine_devices
+#align
+target_netlist(output, write_spice, "Created by KLayout")
+if File.exist? "lvs_work/#{target}_rc_ext_settings.rb"
+  load "lvs_work/#{target}_rc_ext_settings.rb"
+  rc_ext_settings
+end
+# Netlist vs. netlist
+compare if File.exist? reference
+slink = "lvs_work/#{output}.txt"
+File.delete slink if File.exist?(slink)
+if /mswin32|mingw/ =~ RUBY_PLATFORM
+  system "WSL cd lvs_work; ln -s ../#{output}.txt"
+else
+  File.symlink "../#{output}", slink if (File.directory?('lvs_work') &amp;&amp; !File.symlink?(slink))
+end
+</text>
+</klayout-macro>

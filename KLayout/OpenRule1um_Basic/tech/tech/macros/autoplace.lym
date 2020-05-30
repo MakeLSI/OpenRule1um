@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>include RBA
+def library_cell name, libname, layout
+  if cell = layout.cell(name)
+    return cell.cell_index
+  else
+    lib = Library::library_by_name libname
+    #cell_index = lib.layout.cell_by_name(name)
+    #proxy_index = layout.add_lib_cell(lib, cell_index)
+    pcell_id = lib.layout.pcell_id(name)
+    proxy_index = layout.add_pcell_variant(lib, pcell_id, {'l'=&gt;1,'w'=&gt;1,'m'=&gt;1})
+  end
+end
+def instantiate index, x, y
+  CellInstArray.new(index, Trans.new(x, y))
+end
+def each_element file
+  sym=x=y=rot=name=l=w=m=nil
+  xmax=ymax=0
+  File.read(file).each_line{|l|
+    l.chomp!
+    if l =~ /SYMBOL (\S+) (\S+) (\S+) (\S+)/
+      sym = $1
+      x = $2.to_i
+      y = $3.to_i
+      rot=$4
+    elsif l =~ /SYMATTR InstName (\S+)/
+      name = $1
+    elsif l =~ /SYMATTR (SpiceLine|Value2) l=(\S+)u w=(\S+)u *.* m=(\S+)/ ||
+          l =~ /SYMATTR (SpiceLine|Value2) l=(\S+)u w=(\S+)u/
+      l=$2
+      w=$3
+      m=$4
+      yield sym, name, l, w, m ? m : 1, x, y, rot, xmax, ymax
+    elsif l =~ /SHEET 1 (\S+) (\S+)/
+      xmax = $1.to_i
+      ymax = $2.to_i
+    end
+  }
+end
+
+module MyMacro
+ 
+  include RBA
+
+  app = Application.instance
+  mw = app.main_window
+  unless lv = mw.current_view
+    raise "Shape Statistics: No view selected"
+  end
+  asc_file = QFileDialog::getOpenFileName(mw, 'Schematic file', ENV['HOME'], 'asc file(*.asc)')
+  raise 'Cancelled' if asc_file.nil? || asc_file == ''
+  # netlist = '/home/seijirom/Dropbox/work/LRmasterSlice/comparator/COMP_NLF.net'
+  cell = lv.active_cellview.cell
+  layout = cell.layout
+  
+  nch_index = library_cell('Nch', 'PCells', layout)
+  pch_index = library_cell('Pch', 'PCells', layout)
+=begin
+  nch = instantiate nch_index, x=0, y=0
+  inst = cell.insert(nch)
+  inst.change_pcell_parameter 'l', 2
+  inst.change_pcell_parameter 'w', 6
+  inst.change_pcell_parameter 'n', 4
+  inst.transform Trans.new(Trans::R90*Trans::M0, 10,20)
+  
+  pch = instantiate pch_index, x=0, y=0
+  inst = cell.insert(pch)
+  inst.change_pcell_parameter 'l', 2
+  inst.change_pcell_parameter 'w', 6
+  inst.change_pcell_parameter 'n', 4
+  inst.transform Trans.new(Trans::R270, 100,200)
+  puts 'hello'
+=end
+  each_element(asc_file){|sym, name, l, w, m, x, y, rot, xmax, ymax|
+    instance = nil
+    cell.each_inst{|inst|
+      if inst.property('name') == name
+        instance = inst
+        break
+      end
+    }
+    if instance.nil?
+      puts "#{name}: l=#{l} w=#{w} m=#{m ? m : 1} @ (#{x}, #{y}), #{rot}"
+      case sym
+      when 'NMOS@OR1LIB'
+        index = nch_index
+      when 'PMOS@OR1LIB'
+        index = pch_index
+      end
+      mos = instantiate index, 0, 0
+      inst = cell.insert(mos)
+      inst.set_property 'name', name
+      xpos = x/500.to_i*500*100
+      ypos = (ymax - y)/500.to_i*500*200
+      case rot
+      when 'R0'
+        inst.transform Trans.new(Trans::R0, xpos, ypos)
+      when 'R90'
+        inst.transform Trans.new(Trans::R90, xpos, ypos)
+      when 'R180'
+        inst.transform Trans.new(Trans::R180, xpos, ypos)
+      when 'R270'
+        inst.transform Trans.new(Trans::R270, xpos, ypos)
+      when 'M0'
+       inst.transform Trans.new(Trans::M90, xpos, ypos)
+      when 'M90'
+       inst.transform Trans.new(Trans::M135, xpos, ypos)
+      when 'M180'
+       inst.transform Trans.new(Trans::M0, xpos, ypos)
+      when 'M270'
+       inst.transform Trans.new(Trans::M45, xpos, ypos)
+     end
+    else
+      inst = instance
+      old_l = inst.pcell_parameter  'l'
+      old_w = inst.pcell_parameter  'w'
+      old_n = inst.pcell_parameter  'n'
+      next if old_l == l.to_f &amp;&amp; old_w == w.to_f &amp;&amp; old_n = m.to_i
+      puts "Change #{name} to l=#{l}, w=#{w}, n=#{m}"
+    end
+    inst.change_pcell_parameter 'l', l.to_f
+    inst.change_pcell_parameter 'w', w.to_f
+    inst.change_pcell_parameter 'n', m.to_i
+  }
+end
+</text>
+</klayout-macro>

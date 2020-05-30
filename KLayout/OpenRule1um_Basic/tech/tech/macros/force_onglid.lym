@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>module MyMacro
+ 
+  include RBA
+
+  app = Application.instance
+  mw = app.main_window
+  unless lv = mw.current_view
+    raise "Shape Statistics: No view selected"
+  end
+  cell = lv.active_cellview.cell
+  cell.each_inst{|inst|
+    old_x=inst.trans.disp.x
+    x = (old_x/500).to_i * 500
+    old_y=inst.trans.disp.y
+    y = (old_y/500).to_i * 500
+    inst.transform Trans.new(Trans::R0, x-old_x, y-old_y)
+    puts "(#{old_x}, #{old_y}) =&gt; (#{x}, #{y})"
+  }
+    
+end
+</text>
+</klayout-macro>
