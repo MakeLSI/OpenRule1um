@@ -78,7 +78,7 @@
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width/>
+  <width>2</width>
   <marked>false</marked>
   <xfill>false</xfill>
   <animation>0</animation>
@@ -86,18 +86,18 @@
   <source>6/0@1</source>
  </properties>
  <properties>
-  <frame-color>#ffffff</frame-color>
-  <fill-color>#ffffff</fill-color>
+  <frame-color>#000000</frame-color>
+  <fill-color>#000000</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I13</dither-pattern>
-  <line-style/>
+  <dither-pattern>I1</dither-pattern>
+  <line-style>I0</line-style>
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width/>
+  <width>2</width>
   <marked>false</marked>
-  <xfill>false</xfill>
+  <xfill>true</xfill>
   <animation>0</animation>
   <name>CNT</name>
   <source>7/0@1</source>
@@ -120,16 +120,16 @@
   <source>8/0@1</source>
  </properties>
  <properties>
-  <frame-color>#ffffff</frame-color>
-  <fill-color>#ffffff</fill-color>
+  <frame-color>#000000</frame-color>
+  <fill-color>#000000</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I43</dither-pattern>
+  <dither-pattern>I45</dither-pattern>
   <line-style/>
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width/>
+  <width>2</width>
   <marked>false</marked>
   <xfill>false</xfill>
   <animation>0</animation>
@@ -154,11 +154,11 @@
   <source>10/0@1</source>
  </properties>
  <properties>
-  <frame-color>#808080</frame-color>
-  <fill-color>#808080</fill-color>
+  <frame-color>#000000</frame-color>
+  <fill-color>#000000</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I46</dither-pattern>
+  <dither-pattern>I0</dither-pattern>
   <line-style/>
   <valid>true</valid>
   <visible>true</visible>
@@ -222,7 +222,7 @@
   <source>15/0@1</source>
  </properties>
  <properties>
-  <frame-color>#ffffff</frame-color>
+  <frame-color>#000000</frame-color>
   <fill-color>#ffffff</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
@@ -281,7 +281,7 @@
   <line-style/>
   <valid>true</valid>
   <visible>true</visible>
-  <transparent>false</transparent>
+  <transparent>true</transparent>
   <width/>
   <marked>false</marked>
   <xfill>false</xfill>
