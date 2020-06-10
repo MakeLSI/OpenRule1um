@@ -78,6 +78,8 @@ geomConnect( [
         [DM_pscn, PSUB, ML1],
         [DM_via1, ML1, ML2],
         [DM_via2, ML2, ML3],
+        [VIA1, ML1, ML2],
+        [VIA2, ML2, ML3],
         [CNT, POL, ML1], 
         [ptap, Pdiff, PSUB],
         [ntap, Ndiff, NWL]
