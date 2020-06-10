@@ -358,6 +358,23 @@
   <source>105/0@1</source>
  </properties>
  <properties>
+  <frame-color>#688caa</frame-color>
+  <fill-color>#688caa</fill-color>
+  <frame-brightness>0</frame-brightness>
+  <fill-brightness>0</fill-brightness>
+  <dither-pattern>I21</dither-pattern>
+  <line-style/>
+  <valid>true</valid>
+  <visible>true</visible>
+  <transparent>false</transparent>
+  <width/>
+  <marked>false</marked>
+  <xfill>false</xfill>
+  <animation>0</animation>
+  <name>DM_via2</name>
+  <source>106/0@1</source>
+ </properties>
+ <properties>
   <frame-color>#8000ff</frame-color>
   <fill-color>#8000ff</fill-color>
   <frame-brightness>0</frame-brightness>
