@@ -14,12 +14,40 @@
  <menu-path>tools_menu.lvs.end</menu-path>
  <interpreter>dsl</interpreter>
  <dsl-interpreter-name>lvs-dsl-xml</dsl-interpreter-name>
- <text># OpenRule1um lvs rule v1.01 Apr. 6, 2020 copy left by S. Moriyama (Anagix Corporation)
+ <text># OpenRule1um lvs rule
+# v1.01 Apr. 6, 2020 copy left by S. Moriyama (Anagix Corporation)
+# v1.10 June 11, 2020, modified by akita11 (akita@ifdl.jp)
+
+# ********************
+#  Specify schematic's netlist in schematic()
+#  (if not absolute: path relative to original layout)
+# ********************
+schematic("reference.cir")
+
+# ToDo: align MOS's model name
+
 deep
 report_lvs
 
-# Drawing layers
+# Read about LVS scripts in the User Manual in "Layout vs. Schematic (LVS)"
 
+# Try this sample script with this layout:
+#   https://github.com/KLayout/klayout/tree/master/samples/lvs/ringo.gds
+# and this schematic:
+#   https://github.com/KLayout/klayout/tree/master/samples/lvs/schematic.cir
+
+# Tip: you can also use:
+#   schematic(source.path.sub(/\.(oas|gds)/, ".cir"))
+# to derive the schematic name from the layout file's name 
+# by substituting .oas or .gsd with .cir.
+
+# Enable hierarchical mode
+deep
+
+# Produce LVS report
+report_lvs
+
+# Drawing layers
 nwl = input(1, 0)
 nwl_dp = input(2, 0)
 diff = input(3, 0) 
@@ -29,7 +57,7 @@ cnt = input(7, 0)
 ml1 = input(8, 0)
 via1 = input(9, 0) 
 ml2 = input(10, 0)
-via12 = input(11, 0)
+via2 = input(11, 0)
 ml3 = input(12, 0)
 text = input(13, 0)
 frame = input(14, 0)
@@ -47,42 +75,31 @@ dm_via11 = input(105, 0)
 dm_via12 = input(106, 0)
 
 # Special layer for bulk terminals
-
 bulk        = polygon_layer
 
 # Computed layers
-
 diff_in_nwl = diff &amp; nwl
 #pdiff       = diff_in_nwl - narea
 pdiff       = diff_in_nwl &amp; parea
 pgate       = pdiff &amp; pol
 psd         = pdiff - pgate
 ntie        = diff_in_nwl &amp; narea
-# hv_pgate    = pgate &amp; thickox
-# lv_pgate    = pgate - hv_pgate
 lv_pgate = pgate
-# hv_psd      = psd &amp; thickox
-# lv_psd      = psd - thickox
 
 diff_outside_nwl = diff - nwl
-#ndiff      = diff_outside_nwl - parea
 ndiff      = diff_outside_nwl &amp; narea
 ngate      = ndiff &amp; pol
 nsd        = ndiff - ngate
 ptie       = diff_outside_nwl &amp; dm_pscn #&amp; parea
-# hv_ngate   = ngate &amp; thickox
-# lv_ngate   = ngate - hv_ngate
 lv_ngate = ngate
-# hv_nsd     = nsd &amp; thickox
-# lv_nsd     = nsd - thickox
 
 # Device extraction
 # PMOS transistor device extraction
-extract_devices(mos4("PMOS"), { "SD" =&gt; psd, "G" =&gt; lv_pgate, "W" =&gt; nwl, 
+extract_devices(mos4("pch"), { "SD" =&gt; psd, "G" =&gt; lv_pgate, "W" =&gt; nwl, 
                                 "tS" =&gt; psd, "tD" =&gt; psd, "tG" =&gt; pol, "tW" =&gt; nwl })
 
 # NMOS transistor device extraction
-extract_devices(mos4("NMOS"), { "SD" =&gt; nsd, "G" =&gt; lv_ngate, "W" =&gt; bulk, 
+extract_devices(mos4("nch"), { "SD" =&gt; nsd, "G" =&gt; lv_ngate, "W" =&gt; bulk, 
                                 "tS" =&gt; nsd, "tD" =&gt; nsd, "tG" =&gt; pol, "tW" =&gt; bulk })
 
 # Define connectivity for netlist extraction
@@ -97,6 +114,8 @@ connect(cnt, ptie)
 connect(cnt, ml1)
 connect(ml1,  via1)
 connect(via1,     ml2)
+connect(ml2,  via2)
+connect(via2,     ml3)
 
 # Global connections
 connect_global(ptie, "SUBSTRATE")
@@ -105,8 +124,11 @@ connect_global(bulk, "SUBSTRATE")
 #netlist.make_top_level_pins
 netlist.purge
 
-schematic "reference.cir"
+# Netlist normalization
+netlist.simplify
+
 target_netlist("output.cir", write_spice, "Created by KLayout")
+
 if File.exist? "lvs_work/lvs_settings.rb"
   load "lvs_work/lvs_settings.rb"
   lvs_settings()
@@ -117,5 +139,12 @@ if /mswin32|mingw/ =~ RUBY_PLATFORM
 else
   slink = 'lvs_work/output.cir.txt'
   File.symlink 'output.cir', slink unless File.exist? slink
-end</text>
+end
+
+# Hierarchy alignment (flatten out unmatched cells)
+align
+
+# Netlist vs. netlist
+compare
+</text>
 </klayout-macro>

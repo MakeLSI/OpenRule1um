@@ -26,7 +26,7 @@ module MyMacro
   cv = mw.current_view.active_cellview
   raise 'Please save the layout first' if cv.nil? || cv.filename.nil? || cv.filename == ''
   cell = cv.cell
-  netlist = QFileDialog::getOpenFileName(mw, 'Netlist file', ENV['HOME'], 'netlist(*.net *.cir)')
+  netlist = QFileDialog::getOpenFileName(mw, 'Netlist file', ENV['HOME'], 'netlist(*.net *.cir *.sp)')
   netlist = netlist.force_encoding('UTF-8')
   # netlist = '/home/seijirom/Dropbox/work/LRmasterSlice/comparator/COMP_NLF.net'
   # raise "#{netlist} does not exist!" unless File.exist? netlist
@@ -40,7 +40,7 @@ module MyMacro
   cells = []
   circuit_top = nil
   device_class = {}
-  Dir.mkdir 'lvs' unless File.directory? 'lvs'
+  Dir.mkdir 'lvs' unless File.directory? 'lvs_work'
   c = File.open(File.join('lvs', File.basename(netlist))+'.txt', 'w:UTF-8')
   File.open(netlist, 'r:Windows-1252').read.encode('UTF-8', invalid: :replace).each_line{|l|
     l.gsub! 00.chr, ''
