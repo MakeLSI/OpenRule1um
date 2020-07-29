@@ -215,7 +215,7 @@ DM_nscn_r = geomGetRawShapes("DM_nscn", "drawing")
 DM_nscn_r_ovlp = geomAnd(DM_nscn_r)
 geomArea(DM_nscn_r_ovlp, 0, 0, "nsubcont overlap")
 =end
-dm_nscn_ovlp = dm_nscn.raw.merged(2); dm_nscn_ovlp.output("nsubcont overlap")
+# dm_nscn_ovlp = dm_nscn.raw.merged(2); dm_nscn_ovlp.output("nsubcont overlap")
 
 =begin
 DM_pscn_r = geomGetRawShapes("DM_pscn", "drawing")
