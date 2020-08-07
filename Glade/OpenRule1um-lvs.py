@@ -1,5 +1,6 @@
 # 1um Standard Rule Extraction
 # ver0.90 : 2018/4/10: akita11 akita@ifdl.jp
+# ver0.91 : 2020/8/7 : akita11 akita@ifdl.jp
 
 # Initialise boolean package. 
 from ui import *
@@ -91,7 +92,7 @@ geomConnect( [
 print "# Save interconnect"
 saveInterconnect([
 		NWL,
-                PSUB,
+                [PSUB, "PSUB"],
 		DM_dcn,
 		DM_pcn,
 		DM_nscn,
