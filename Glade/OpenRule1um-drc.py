@@ -7,6 +7,7 @@
 # ver1.31 : 2018/11/28: akita11 akita@ifdl.jp (modified HPOL gap rule)
 # ver1.32 : 2020/05/20: akita11 akita@ifdl.jp (check DIFF outside Narea/Parea/DM_nscn/DM_pscn)
 # ver1.33 : 2020/05/25: akita11 akita@ifdl.jp (check offgrid)
+# ver1.35 : 2020/09/23: akita11 akita@ifdl.jp (Stand-alone CNT/Via/Via2, DM_nsubcont gap)
 
 # simpe function to print # errors - unused.
 def printErrors(msg) :
@@ -108,6 +109,7 @@ geomSpace(DM_via1, DM_nscn, 0.5, "via1-nscont space < 0.5")
 geomSpace(DM_via1, DM_pscn, 0.5, "via1-pscont space < 0.5")
 geomSpace(DM_via1, DM_via2, 0.5, "via1-via2 space < 0.5")
 geomSpace(DM_dcn, 1.0, "dcont space < 1.0")
+geomSpace(DM_nscn, 1.5, "DM_nsubcont space < 1.5")
 #geomSpace(HIPOL, 1.0, "Poly in HPOL space < 1.0")
 geomSpace(HIPOL, 2.0, "Poly in HPOL space < 2.0")
 geomSpace(POL, HIPOL, 1.0, "Poly outside HPOL space < 1.0")
@@ -168,13 +170,10 @@ geomWidth(HIPOL, 2.0, "Poly in HPOL width < 2.0")
 
 print "Check Enclose"
 geomEnclose(NWL, Pdiff, 2, "Pdiff enclosure in NWL < 2.0")
-geomArea(geomAnd(PSUB, DM_nscn), 0, 0, "nsubcon outside NWL") # not shown in rule v110
+geomArea(geomAnd(PSUB, DM_nscn), 0, 0, "nsubcon outside NWL")
 geomEnclose(Parea, DIFF, 0.5, "DIFF enclosure in Parea < 0.5")
 geomEnclose(Narea, DIFF, 0.5, "DIFF enclosure in Narea < 0.5")
 geomEnclose(HPOL, HIPOL, 5.0, "POL enclosure in HPOL < 5.0")
-
-# for checking diff enclosure for psubcont without Parea in psubcont
-#geomAreaIn(geomAndNot(DIFF, Area), 0, 9e99, 'DIFF not enclosed by Parea/Narea/DM_pscn/DMnscn')
 
 # for checking diff enclosure for psubcont with Parea in psubcont
 bad_active = geomAndNot(DIFF, geomContains(Area, DIFF))
@@ -183,16 +182,16 @@ saveDerived(bad_active, 'DIFF not enclosed by P/Narea')
 print "Check MOS gate extension"
 geomExtension(POL, DIFF, 1, "POL gate extension < 1.0")
 
-print "Check stand-alone Cont/Via"
+print "Check stand-alone Cont/Via without DM layers"
 DMcnt1 = geomOr(DM_dcn, DM_pcn)
 DMcnt2 = geomOr(DMcnt1, DM_nscn)
 DMcnt = geomOr(DMcnt2, DM_pscn)
-SAcnt = geomAnd(CNT, geomNot(DMcnt))
-geomArea(SAcnt, 0, 0, "Stand alone Cont")
+SAcnt = geomAndNot(CNT, geomContains(DMcnt, CNT))
+saveDerived(SAcnt, 'Stand-alone CNT')
 SAvia1 = geomAnd(VIA1, geomNot(DM_via1))
-geomArea(SAvia1, 0, 0, "Stand alone VIA1")
+saveDerived(SAvia1, "Stand alone VIA1")
 SAvia2 = geomAnd(VIA2, geomNot(DM_via2))
-geomArea(SAvia2, 0, 0, "Stand alone VIA2")
+saveDerived(SAvia2, "Stand alone VIA2")
 
 print "Check offgrid"
 geomOffGrid(NWL, 0.5, 0.1, "NWL offgrid")
