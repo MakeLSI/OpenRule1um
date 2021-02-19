@@ -78,7 +78,7 @@
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width>2</width>
+  <width/>
   <marked>false</marked>
   <xfill>false</xfill>
   <animation>0</animation>
@@ -86,18 +86,18 @@
   <source>6/0@1</source>
  </properties>
  <properties>
-  <frame-color>#000000</frame-color>
-  <fill-color>#000000</fill-color>
+  <frame-color>#ffffff</frame-color>
+  <fill-color>#ffffff</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I1</dither-pattern>
-  <line-style>I0</line-style>
+  <dither-pattern>I13</dither-pattern>
+  <line-style/>
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width>2</width>
+  <width/>
   <marked>false</marked>
-  <xfill>true</xfill>
+  <xfill>false</xfill>
   <animation>0</animation>
   <name>CNT</name>
   <source>7/0@1</source>
@@ -107,12 +107,12 @@
   <fill-color>#00aaff</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I4</dither-pattern>
+  <dither-pattern>I7</dither-pattern>
   <line-style/>
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width>1</width>
+  <width/>
   <marked>false</marked>
   <xfill>false</xfill>
   <animation>0</animation>
@@ -120,16 +120,16 @@
   <source>8/0@1</source>
  </properties>
  <properties>
-  <frame-color>#404040</frame-color>
-  <fill-color>#404040</fill-color>
+  <frame-color>#ffffff</frame-color>
+  <fill-color>#ffffff</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I46</dither-pattern>
-  <line-style>I0</line-style>
+  <dither-pattern>I43</dither-pattern>
+  <line-style/>
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width>2</width>
+  <width/>
   <marked>false</marked>
   <xfill>false</xfill>
   <animation>0</animation>
@@ -146,7 +146,7 @@
   <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
-  <width>2</width>
+  <width/>
   <marked>false</marked>
   <xfill>false</xfill>
   <animation>0</animation>
@@ -154,11 +154,11 @@
   <source>10/0@1</source>
  </properties>
  <properties>
-  <frame-color>#9e9e9e</frame-color>
-  <fill-color>#9e9e9e</fill-color>
+  <frame-color>#808080</frame-color>
+  <fill-color>#808080</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I0</dither-pattern>
+  <dither-pattern>I46</dither-pattern>
   <line-style/>
   <valid>true</valid>
   <visible>true</visible>
@@ -171,11 +171,11 @@
   <source>11/0@1</source>
  </properties>
  <properties>
-  <frame-color>#8000ff</frame-color>
-  <fill-color>#8000ff</fill-color>
+  <frame-color>#0000ff</frame-color>
+  <fill-color>#0000ff</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
+  <dither-pattern>I11</dither-pattern>
   <line-style/>
   <valid>true</valid>
   <visible>true</visible>
@@ -222,7 +222,7 @@
   <source>15/0@1</source>
  </properties>
  <properties>
-  <frame-color>#000000</frame-color>
+  <frame-color>#ffffff</frame-color>
   <fill-color>#ffffff</fill-color>
   <frame-brightness>0</frame-brightness>
   <fill-brightness>0</fill-brightness>
@@ -281,7 +281,7 @@
   <line-style/>
   <valid>true</valid>
   <visible>true</visible>
-  <transparent>true</transparent>
+  <transparent>false</transparent>
   <width/>
   <marked>false</marked>
   <xfill>false</xfill>
@@ -358,23 +358,6 @@
   <source>105/0@1</source>
  </properties>
  <properties>
-  <frame-color>#688caa</frame-color>
-  <fill-color>#688caa</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I21</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width/>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>DM_via2</name>
-  <source>106/0@1</source>
- </properties>
- <properties>
   <frame-color>#8000ff</frame-color>
   <fill-color>#8000ff</fill-color>
   <frame-brightness>0</frame-brightness>
@@ -390,159 +373,6 @@
   <animation>0</animation>
   <name>CAP</name>
   <source>16/0@1</source>
- </properties>
- <properties>
-  <frame-color>#00aaff</frame-color>
-  <fill-color>#00aaff</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML1.LABEL</name>
-  <source>ML1.LABEL 8/1@1</source>
- </properties>
- <properties>
-  <frame-color>#cccccc</frame-color>
-  <fill-color>#cccccc</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML2.LABEL</name>
-  <source>ML2.LABEL 10/1@1</source>
- </properties>
- <properties>
-  <frame-color>#0000ff</frame-color>
-  <fill-color>#0000ff</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML3.LABEL</name>
-  <source>ML3.LABEL 12/1@1</source>
- </properties>
- <properties>
-  <frame-color>#00aaff</frame-color>
-  <fill-color>#00aaff</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML1.PIN</name>
-  <source>ML1.PIN 8/2@1</source>
- </properties>
- <properties>
-  <frame-color>#cccccc</frame-color>
-  <fill-color>#cccccc</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML2.PIN</name>
-  <source>ML2.PIN 10/2@1</source>
- </properties>
- <properties>
-  <frame-color>#0000ff</frame-color>
-  <fill-color>#0000ff</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML3.PIN</name>
-  <source>ML3.PIN 12/2@1</source>
- </properties>
- <properties>
-  <frame-color>#00aaff</frame-color>
-  <fill-color>#00aaff</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML1.OBS</name>
-  <source>ML1.OBS 8/3@1</source>
- </properties>
- <properties>
-  <frame-color>#cccccc</frame-color>
-  <fill-color>#cccccc</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML2.OBS</name>
-  <source>ML2.OBS 10/3@1</source>
- </properties>
- <properties>
-  <frame-color>#0000ff</frame-color>
-  <fill-color>#0000ff</fill-color>
-  <frame-brightness>0</frame-brightness>
-  <fill-brightness>0</fill-brightness>
-  <dither-pattern>I9</dither-pattern>
-  <line-style/>
-  <valid>true</valid>
-  <visible>true</visible>
-  <transparent>false</transparent>
-  <width>1</width>
-  <marked>false</marked>
-  <xfill>false</xfill>
-  <animation>0</animation>
-  <name>ML3.OBS</name>
-  <source>ML3.OBS 8/4@1</source>
  </properties>
  <name/>
  <custom-dither-pattern>

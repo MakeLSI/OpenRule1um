@@ -1,0 +1,2 @@
+.include "./BSIM3V3N.mod"
+.include "./BSIM3V3P.mod"

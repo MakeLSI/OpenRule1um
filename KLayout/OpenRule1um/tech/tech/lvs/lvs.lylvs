@@ -14,22 +14,10 @@
  <menu-path>tools_menu.lvs.end</menu-path>
  <interpreter>dsl</interpreter>
  <dsl-interpreter-name>lvs-dsl-xml</dsl-interpreter-name>
- <text># OpenRule1um lvs rule
-# v1.01 Apr. 6, 2020 copy left by S. Moriyama (Anagix Corporation)
-# v1.10 June 11, 2020, modified by akita11 (akita@ifdl.jp)
+ <text># OpenRule1um lvs rule v1.21 June 29, 2020 copy left by S. Moriyama (Anagix Corporation)
+# merged:  v1.10 June 11, 2020, modified by akita11 (akita@ifdl.jp)
 
-# ********************
-#  Specify schematic's netlist in schematic()
-#  (if not absolute: path relative to original layout)
-# ********************
-schematic("reference.cir")
-
-# ToDo: align MOS's model name
-
-deep
-report_lvs
-
-# Read about LVS scripts in the User Manual in "Layout vs. Schematic (LVS)"
+# Read LVS scripts in the User Manual in "Layout vs. Schematic (LVS)"
 
 # Try this sample script with this layout:
 #   https://github.com/KLayout/klayout/tree/master/samples/lvs/ringo.gds
@@ -43,11 +31,12 @@ report_lvs
 
 # Enable hierarchical mode
 deep
-
-# Produce LVS report
+# Enable hierarchical mode
 report_lvs
 
+
 # Drawing layers
+
 nwl = input(1, 0)
 nwl_dp = input(2, 0)
 diff = input(3, 0) 
@@ -71,8 +60,8 @@ dm_dcn = input(101, 0)
 dm_pcn = input(102, 0)
 dm_nscn = input(103, 0)
 dm_pscn = input(104, 0)
-dm_via11 = input(105, 0)
-dm_via12 = input(106, 0)
+dm_via1 = input(105, 0)
+dm_via2 = input(106, 0)
 
 # Special layer for bulk terminals
 bulk        = polygon_layer
@@ -123,28 +112,52 @@ connect_global(bulk, "SUBSTRATE")
 
 #netlist.make_top_level_pins
 netlist.purge
-
 # Netlist normalization
 netlist.simplify
 
-target_netlist("output.cir", write_spice, "Created by KLayout")
+sdir = File.dirname source.path
+ext_name = File.extname source.path
+target = File.basename(source.path).sub(ext_name, '')
+reference = File.join(sdir, "#{target}_reference.cir")
+output = File.join sdir, "#{target}_output.cir"
+lvs_work = File.join(sdir, 'lvs_work')
+Dir.mkdir lvs_work unless File.directory? lvs_work
 
-if File.exist? "lvs_work/lvs_settings.rb"
-  load "lvs_work/lvs_settings.rb"
-  lvs_settings()
-end
-compare
-if /mswin32|mingw/ =~ RUBY_PLATFORM
-  system 'WSL cd lvs_work; ln -s ../output.cir output.cir.txt'
-else
-  slink = 'lvs_work/output.cir.txt'
-  File.symlink 'output.cir', slink unless File.exist? slink
+if File.exist? File.join(sdir, target+'.yaml')
+  require 'yaml'
+  ref = YAML.load File.read(File.join sdir, target+'.yaml')
+  if File.exist? ref['netlist']
+    if File.exist?(ref['schematic']) &amp;&amp; (File.mtime(ref['netlist']) &lt; File.mtime(ref['schematic']))
+      raise "netlist file '#{ref['netlist']}' is outdated!\nPlease update netlist and run get_reference again!"
+    end
+    if File.exist?(reference) &amp;&amp; (File.mtime(reference) &lt; File.mtime(ref['netlist']))
+      raise "Please run get_reference because netlist file '#{ref['netlist']}'is modified"
+    end
+  end
 end
 
+# -------------------------------------------------------------------
+# Netlist and compare
+
+target_netlist(output, write_spice, "Created by KLayout")
+
+if File.exist? reference
+  schematic reference
+  if File.exist? "#{lvs_work}/#{target}_lvs_settings.rb"
+    load "#{lvs_work}/#{target}_lvs_settings.rb"
+    lvs_settings
+  end
 # Hierarchy alignment (flatten out unmatched cells)
-align
-
+  align
 # Netlist vs. netlist
-compare
+  compare
+  slink = "#{lvs_work}/#{File.basename output}.txt"
+  File.delete slink if File.exist?(slink)
+  if /mswin32|mingw/ =~ RUBY_PLATFORM
+    File.link output, slink
+  else
+    File.symlink "../#{File.basename output}", slink
+  end
+end
 </text>
 </klayout-macro>
