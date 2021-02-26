@@ -14,7 +14,7 @@
  <menu-path>tools_menu.lvs.end</menu-path>
  <interpreter>dsl</interpreter>
  <dsl-interpreter-name>lvs-dsl-xml</dsl-interpreter-name>
- <text># OpenRule1um lvs rule v1.21 June 29, 2020 copy left by S. Moriyama (Anagix Corporation)
+ <text># OpenRule1um lvs rule v1.22 Feb. 26, 2021 modified by R. Okawa (okawa@ifdl.jp)
 # merged:  v1.10 June 11, 2020, modified by akita11 (akita@ifdl.jp)
 
 # Read LVS scripts in the User Manual in "Layout vs. Schematic (LVS)"
@@ -34,9 +34,7 @@ deep
 # Enable hierarchical mode
 report_lvs
 
-
 # Drawing layers
-
 nwl = input(1, 0)
 nwl_dp = input(2, 0)
 diff = input(3, 0) 
@@ -84,45 +82,49 @@ lv_ngate = ngate
 
 # Device extraction
 # PMOS transistor device extraction
-extract_devices(mos4("pch"), { "SD" =&gt; psd, "G" =&gt; lv_pgate, "W" =&gt; nwl, 
+extract_devices(mos4("PMOS"), { "SD" =&gt; psd, "G" =&gt; lv_pgate, "W" =&gt; nwl, 
                                 "tS" =&gt; psd, "tD" =&gt; psd, "tG" =&gt; pol, "tW" =&gt; nwl })
 
 # NMOS transistor device extraction
-extract_devices(mos4("nch"), { "SD" =&gt; nsd, "G" =&gt; lv_ngate, "W" =&gt; bulk, 
+extract_devices(mos4("NMOS"), { "SD" =&gt; nsd, "G" =&gt; lv_ngate, "W" =&gt; bulk, 
                                 "tS" =&gt; nsd, "tD" =&gt; nsd, "tG" =&gt; pol, "tW" =&gt; bulk })
 
 # Define connectivity for netlist extraction
 
 # Inter-layer
-connect(psd,     cnt)
-connect(nsd,     cnt)
-connect(pol,    cnt)
+connect(psd, cnt)
+connect(nsd, cnt)
+connect(pol, cnt)
 connect(cnt, ntie)
-connect(nwl,   ntie)
+connect(nwl, ntie)
 connect(cnt, ptie)
 connect(cnt, ml1)
-connect(ml1,  via1)
-connect(via1,     ml2)
-connect(ml2,  via2)
-connect(via2,     ml3)
+connect(ml1, via1)
+connect(via1, ml2)
+connect(ml2, via2)
+connect(via2, ml3)
 
 # Global connections
 connect_global(ptie, "SUBSTRATE")
 connect_global(bulk, "SUBSTRATE")
 
 #netlist.make_top_level_pins
-netlist.purge
+#netlist.purge  # ToDo: This code run within ".simlify" method
 # Netlist normalization
 netlist.simplify
 
-sdir = File.dirname source.path
-ext_name = File.extname source.path
-target = File.basename(source.path).sub(ext_name, '')
-reference = File.join(sdir, "#{target}_reference.cir")
-output = File.join sdir, "#{target}_output.cir"
-lvs_work = File.join(sdir, 'lvs_work')
+# Create some files or directory path and name
+sdir = File.dirname source.path  # Get directory path include layout file
+ext_name = File.extname source.path   # Get extension name
+target = File.basename(source.path).sub(ext_name, '')   # Get layout file name removed extension name
+reference = File.join(sdir, "#{target}_reference.cir")   # Get full file path of the reference netlist
+output = File.join(sdir, "#{target}_output.cir")   # Get full file path of the netlist with extracted from layout
+lvs_work = File.join(sdir, 'lvs_work')   # Get directory path of 'lvs_work'
+
+# Make directory
 Dir.mkdir lvs_work unless File.directory? lvs_work
 
+# Read netlist path
 if File.exist? File.join(sdir, target+'.yaml')
   require 'yaml'
   ref = YAML.load File.read(File.join sdir, target+'.yaml')
@@ -139,18 +141,27 @@ end
 # -------------------------------------------------------------------
 # Netlist and compare
 
+# Output netlist
+File.open(File.basename(output), 'w:UTF-8'){ |f| f.puts ''}  # Make empty file : this code need to before "target_netlist()"
 target_netlist(output, write_spice, "Created by KLayout")
 
+# Execute LVS when exist the reference netlist
 if File.exist? reference
-  schematic reference
+  # Setting reference netlist
+  schematic(reference)
+  
+  # Load and execute LVS setting
   if File.exist? "#{lvs_work}/#{target}_lvs_settings.rb"
     load "#{lvs_work}/#{target}_lvs_settings.rb"
     lvs_settings
   end
-# Hierarchy alignment (flatten out unmatched cells)
+  
+  # Hierarchy alignment (flatten out unmatched cells)
   align
-# Netlist vs. netlist
+  # Netlist vs. netlist
   compare
+  
+  # Make hard link (symbolic link)
   slink = "#{lvs_work}/#{File.basename output}.txt"
   File.delete slink if File.exist?(slink)
   if /mswin32|mingw/ =~ RUBY_PLATFORM
@@ -158,6 +169,5 @@ if File.exist? reference
   else
     File.symlink "../#{File.basename output}", slink
   end
-end
-</text>
+end</text>
 </klayout-macro>
