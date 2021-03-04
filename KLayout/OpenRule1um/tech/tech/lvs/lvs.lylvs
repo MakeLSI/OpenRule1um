@@ -9,7 +9,7 @@
  <autorun>false</autorun>
  <autorun-early>false</autorun-early>
  <shortcut/>
- <show-in-menu>false</show-in-menu>
+ <show-in-menu>true</show-in-menu>
  <group-name>lvs_scripts</group-name>
  <menu-path>tools_menu.lvs.end</menu-path>
  <interpreter>dsl</interpreter>
