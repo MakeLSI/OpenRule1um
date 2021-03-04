@@ -14,7 +14,8 @@
  <menu-path/>
  <interpreter>ruby</interpreter>
  <dsl-interpreter-name/>
- <text> # OpenRule1um PCells v1.82 Feb. 11, 2020 copy left by S. Moriyama (Anagix Corporation)
+ <text> # OpenRule1um PCells v1.92 Feb. 18th, 2020 copy left by S. Moriyama (Anagix Corporation)
+ # note for experimental PIP capacitor: works if CAP layer is used for 2nd Poly layer (do not use with Diff cap)
  module OpenRule1um
 
   include RBA
@@ -89,11 +90,11 @@
       m1_index = layout.insert_layer(LayerInfo::new(8, 0))
       parea_index = layout.insert_layer(LayerInfo::new(18, 0))
       narea_index = layout.insert_layer(LayerInfo::new(19, 0))
-      via_index = library_cell('Via', 'OpenRule1um', layout)
-      dcont_index = library_cell('dcont', 'OpenRule1um', layout)
-      pcont_index = library_cell('pcont', 'OpenRule1um', layout)
-      nsubcont_index = library_cell('nsubcont', 'OpenRule1um', layout)
-      psubcont_index = library_cell('psubcont', 'OpenRule1um', layout) 
+      via_index = library_cell('Via', 'OpenRule1um_Basic', layout)
+      dcont_index = library_cell('dcont', 'OpenRule1um_Basic', layout)
+      pcont_index = library_cell('pcont', 'OpenRule1um_Basic', layout)
+      nsubcont_index = library_cell('nsubcont', 'OpenRule1um_Basic', layout)
+      psubcont_index = library_cell('psubcont', 'OpenRule1um_Basic', layout) 
       offset = 0
       (n+1).times{|i|
         x = vs/2 + offset
@@ -171,8 +172,8 @@
     def produce_impl # NMOS
       produce_impl_core {|indices, x1, y1, x2, y2, vs, u1, gl|
         # create pcont
-        insert_cell indices[:pcont], x1+vs/2 +3*u1/10, y2-vs/2
-        insert_cell indices[:via], x1+vs/2 +3*u1/10, y2-vs/2
+        insert_cell indices[:pcont], x1+vs/2, y2-vs/2
+        insert_cell indices[:via], x1+vs/2, y2-vs/2
         create_path2 indices[:pol], x1+vs/2, y2-vs/2, x1+vs+u1/2, y2-vs/2, x1+vs+u1/2, y2-vs,u1, 0, 0
         offset = 0
         top = nil
@@ -194,9 +195,9 @@
           else
             # second s/d and via
             if n == 1
-              insert_cell indices[:via], x+3*u1/10, y2-vs/2
+              insert_cell indices[:via], x, y2-vs/2
             else
-              insert_cell indices[:via], x+3*u1/10, y2+u1-vs/2
+              insert_cell indices[:via], x, y2+u1-vs/2
             end
             create_path indices[:m1], x, y2-vs-u1, x, y2+u1-vs/2, u1, 0, 0
             if bottom
@@ -212,7 +213,9 @@
         else
           y = y1+vs/2
         end
-        insert_cell indices[:psubcont], offset -vs/2-gl+u1/2, y
+        x = offset -vs/2-gl+u1/2
+        insert_cell indices[:psubcont], x, y
+        d = vs/2 + u1/2
         insert_cell indices[:via], offset-vs/2-gl+u1/2, y 
         create_box indices[:narea], x1-u1, y1+vs+u1/2, offset-gl+u1, y2-vs-u1/2
       }
@@ -235,8 +238,8 @@
     def produce_impl # PMOS
      produce_impl_core {|indices, x1, y1, x2, y2, vs, u1, gl|
         # create pcont
-        insert_cell indices[:pcont], x1+vs/2  +3*u1/10, y1+vs/2
-        insert_cell indices[:via], x1+vs/2  +3*u1/10, y1+vs/2
+        insert_cell indices[:pcont], x1+vs/2, y1+vs/2
+        insert_cell indices[:via], x1+vs/2, y1+vs/2
         create_path2 indices[:pol], x1+vs/2, y1+vs/2, x1+vs+u1/2, y1+vs/2, x1+vs+u1/2, y1+vs, u1, 0, 0
         offset = 0
         top = nil
@@ -258,9 +261,9 @@
             # second s/d and via
             if i == 1
               if n == 1
-                insert_cell indices[:via], x +3*u1/10, y1+vs/2
+                insert_cell indices[:via], x, y1+vs/2
               else
-                insert_cell indices[:via], x +3*u1/10, y1-u1+vs/2
+                insert_cell indices[:via], x, y1-u1+vs/2
               end
             else
               insert_cell indices[:via], x, y1-u1+vs/2
@@ -275,11 +278,11 @@
         }
         # nsubcont and via
         if n % 2 == 0
-          y = y1 + vs/2
+          y = y1 + vs/2 - u1/2
         else
-          y = y2 - vs/2
+          y = y2 - vs/2 + u1/2
         end
-        x = offset - vs/2 -gl + u1/2
+        x = offset - vs/2 -gl + u1
         insert_cell indices[:nsubcont], x, y
         insert_cell indices[:via], x, y
         
@@ -395,8 +398,8 @@
       m1_index = layout.insert_layer(LayerInfo::new(8, 0))
       m2_index = layout.insert_layer(LayerInfo::new(10, 0))
       res_index = layout.insert_layer(LayerInfo::new(15, 0))
-      via_index = library_cell('Via', 'OpenRule1um', layout)
-      pcont_index = library_cell('pcont', 'OpenRule1um', layout)
+      via_index = library_cell('Via', 'OpenRule1um_Basic', layout)
+      pcont_index = library_cell('pcont', 'OpenRule1um_Basic', layout)
       prev_x = nil
       for i in 0..n-1
         offset = vs/2 + (sp+(w/layout.dbu).to_i)*i
@@ -478,7 +481,7 @@
     def initialize
       super
       param(:l, TypeDouble, "Resistor length", :default =&gt; 10.0.um)
-      param(:w, TypeDouble, "Resistor width", :default =&gt; 1.0.um)
+      param(:w, TypeDouble, "Resistor width", :default =&gt; 2.0.um)
       param(:n, TypeInt, "Number of maximum stripes", :default =&gt; 1)
 
       param(:rval, TypeDouble, "Resistor value", :default =&gt; 0, :hidden=&gt; true)
@@ -589,17 +592,21 @@
       m2_index = layout.insert_layer(LayerInfo::new(10, 0))
       cap_index = layout.insert_layer(LayerInfo::new(16, 0))
       parea_index = layout.insert_layer(LayerInfo::new(18, 0))
-      via_index = library_cell('Via', 'OpenRule1um', layout)
-      pcont_index = library_cell('pcont', 'OpenRule1um', layout)
-      dcont_index = library_cell('dcont', 'OpenRule1um', layout)
-      nsubcont_index = library_cell('nsubcont', 'OpenRule1um', layout)
+      via_index = library_cell('Via', 'OpenRule1um_Basic', layout)
+      pcont_index = library_cell('pcont', 'OpenRule1um_Basic', layout)
+      dcont_index = library_cell('dcont', 'OpenRule1um_Basic', layout)
+      nsubcont_index = library_cell('nsubcont', 'OpenRule1um_Basic', layout)
       create_box pol_index, 0, 0, u1+vs+u1 + cw, cl
       create_box diff_index, u1+vs+u1, -u1, u1+vs+u1+ cw+u1, cl+u1+vs+u1
       create_box parea_index, u1+vs, -2*u1, u1+vs+u1+ cw+2*u1, cl+u1+vs+2*u1
       create_box nwl_index, -4*u1, -4*u1,  u1+vs+u1+cw + 4*u1, cl + 2*vs +4*u1
-      create_box cap_index, -4*u1, -4*u1,  u1+vs+u1+cw + 4*u1, cl + 2*vs +4*u1
+      # create_box cap_index, -4*u1, -4*u1,  u1+vs+u1+cw + 4*u1, cl + 2*vs +4*u1
+      #create_box cap_index, u1+vs+u1, -u1, u1+vs+u1+ cw+u1, cl+u1+vs+u1 # same area as diff
+      create_box cap_index, 0, 0, u1+vs+u1 + cw, cl # same area as pol
       create_contacts_vertically pcont_index, u1+vs/2, 0, u1+vs/2, cl, vs
+      create_contacts_vertically via_index, u1+vs/2, 0, u1+vs/2, cl, vs
       create_contacts_horizontally dcont_index, u1+vs+u1,  cl + u1+vs/2, u1+vs+u1+ cw, cl + u1+vs/2, vs
+      create_contacts_horizontally via_index, u1+vs+u1,  cl + u1+vs/2, u1+vs+u1+ cw, cl + u1+vs/2, vs
       insert_cell nsubcont_index, 0, cl+2*u1+vs
 
 #          points = [Point::new(offset, vs), Point::new(offset, vs/2+r)]
@@ -665,8 +672,8 @@
       
       pol_index = layout.insert_layer(LayerInfo::new(5, 0))
       cap_index = layout.insert_layer(LayerInfo::new(16, 0))
-      via_index = library_cell('Via', 'OpenRule1um', layout)
-      pcont_index = library_cell('pcont', 'OpenRule1um', layout)
+      via_index = library_cell('Via', 'OpenRule1um_Basic', layout)
+      pcont_index = library_cell('pcont', 'OpenRule1um_Basic', layout)
       create_box pol_index, 0, 0, u1+vs+u1 + cw, cl
       create_box cap_index, u1+vs+u1, -u1, u1+vs+u1+ cw+u1, cl+u1+vs+u1
       create_contacts_vertically pcont_index, u1+vs/2, 0, u1+vs/2, cl, vs

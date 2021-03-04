@@ -14,7 +14,10 @@
  <menu-path>tools_menu.lvs.end</menu-path>
  <interpreter>dsl</interpreter>
  <dsl-interpreter-name>lvs-dsl-xml</dsl-interpreter-name>
- <text># OpenRule1um lvs rule for Analog v1.12 Apr. 6, 2020 copy left by S. Moriyama (Anagix Corporation)
+ <text># OpenRule1um lvs rule for Analog v1.24 Sep. 6th, 2020 copy left by S. Moriyama (Anagix Corporation)
+# note for Capacitor extraction
+#   works only for Diffusion - Poly capacitance
+#   experimental PIP capacitor works if CAP layer is used for 2nd Poly layer (do not use with Diff cap)
 deep
 report_lvs
 
@@ -29,7 +32,7 @@ cnt = input(7, 0)
 ml1 = input(8, 0)
 via1 = input(9, 0) 
 ml2 = input(10, 0)
-via12 = input(11, 0)
+via2 = input(11, 0)
 ml3 = input(12, 0)
 text = input(13, 0)
 frame = input(14, 0)
@@ -43,22 +46,26 @@ dm_dcn = input(101, 0)
 dm_pcn = input(102, 0)
 dm_nscn = input(103, 0)
 dm_pscn = input(104, 0)
-dm_via11 = input(105, 0)
-dm_via12 = input(106, 0)
+dm_via1 = input(105, 0)
+dm_via2 = input(106, 0)
 
 # Special layer for bulk terminals
 
 bulk        = polygon_layer
 
 # Computed layers
-pol_not_res  = pol - res
-pol_in_res   = pol &amp; res
+pol_in_hpol = pol &amp; hpol
+pol_not_hpol = pol - hpol
+pol_not_res  = pol_not_hpol - res
+pol_in_res   = pol_not_hpol &amp; res
 
-hpol_not_res  = hpol - res
-hpol_in_res   = hpol &amp; res
+hpol_not_res  = pol_in_hpol - res
+hpol_in_res   = pol_in_hpol &amp; res
 
 cnt_in_cap = cnt &amp; cap
-pol_overlapping_cap = pol.overlapping(cap) - pol.inside(cap)
+pol_overlapping_cap = pol_not_res.overlapping(cap) - pol_not_res.inside(cap)
+
+diff_overlapping_cap = diff.overlapping(cap) - diff.inside(cap)
 
 #diff_in_cap = diff &amp; cap
 #diff_not_cap = diff - cap
@@ -91,12 +98,16 @@ lv_ngate = ngate
 # Capacitor extraction
 area_cap = 1.72e-15
 model_name = 'CAP'
-extract_devices(capacitor(model_name, area_cap), {'P1'=&gt;pol_overlapping_cap, 'P2'=&gt; cap})                         
+extract_devices(capacitor(model_name, area_cap), {'P1'=&gt;pol_overlapping_cap, 'P2'=&gt; cap}) 
+
+# model_name = 'DCAP'
+area_cap = 2.60e-15
+extract_devices(capacitor(model_name, area_cap), {'P1'=&gt;diff_overlapping_cap, 'P2'=&gt; cap})                    
 # resistance extraction
 
 model_name = "D"
-pplus = (diff_in_nwl &amp; parea )  - (pgate + psd)
-extract_devices(diode(model_name), { "P" =&gt; pplus, "N" =&gt; nwl , 'tA' =&gt; cnt,  'tC' =&gt; cnt})
+pplus = pdiff - pdiff.interacting(pgate)
+extract_devices(diode(model_name), { "P" =&gt; pplus, "N" =&gt; nwl })
 
 sheet_rho = 20.0
 model_name = "RES"
@@ -122,11 +133,13 @@ extract_devices(mos4("NMOS"), { "SD" =&gt; nsd, "G" =&gt; lv_ngate, "W" =&gt; bu
 # Inter-layer
 connect(psd,     cnt)
 connect(nsd,     cnt)
-connect(pol,    cnt)
+# connect(pol,    cnt)
 connect(pol_not_res, cnt)
 connect(hpol_not_res, cnt)
 connect(pol_overlapping_cap, cnt)
+connect(diff_overlapping_cap, cnt)
 connect(cap, cnt)
+connect(pplus, cnt)
 
 connect(cnt, ntie)
 connect(nwl,   ntie)
@@ -134,51 +147,70 @@ connect(cnt, ptie)
 connect(cnt, ml1)
 connect(ml1,  via1)
 connect(via1,     ml2)
+connect(ml2, via2)
+connect(via2, ml3)
 
 # Global connections
 connect_global(ptie, "SUBSTRATE")
 connect_global(bulk, "SUBSTRATE")
 
+sdir = File.dirname source.path
 ext_name = File.extname source.path
 target = File.basename(source.path).sub(ext_name, '')
-reference = "#{target}_reference.cir"
+reference = File.join(sdir, "#{target}_reference.cir")
+output = File.join sdir, "#{target}_output.cir"
+lvs_work = File.join(sdir, 'lvs_work')
+Dir.mkdir lvs_work unless File.directory? lvs_work
 
-if File.exist? target+'.yaml'
+if File.exist? File.join(sdir, target+'.yaml')
   require 'yaml'
-  ref = YAML.load File.read(target+'.yaml')
-  if File.mtime(ref['netlist']) &lt; File.mtime(ref['schematic']) 
-    raise "netlist file '#{ref['netlist']}' is outdated!\nPlease update netlist and run get_reference again!"
+  ref = YAML.load File.read(File.join sdir, target+'.yaml')
+  if File.exist? ref['netlist']
+    if File.exist?(ref['schematic']) &amp;&amp; (File.mtime(ref['netlist']) &lt; File.mtime(ref['schematic']))
+      raise "netlist file '#{ref['netlist']}' is outdated!\nPlease update netlist and run get_reference again!"
+    end
+    if File.exist?(reference) &amp;&amp; (File.mtime(reference) &lt; File.mtime(ref['netlist']))
+      raise "Please run get_reference because netlist file '#{ref['netlist']}'is modified"
+    end
   end
-  if File.mtime(reference) &lt; File.mtime(ref['netlist']) 
-    raise "Please run get_reference because netlist file '#{ref['netlist']}'is modified"
-  end
-  end
-output = "#{target}_output.cir"
+end
 
-schematic reference if File.exist? reference
+if File.exist? File.join(sdir, target+'.yaml')
+  require 'yaml'
+  ref = YAML.load File.read(File.join sdir, target+'.yaml')
+  if File.exist? ref['netlist']
+    if File.exist?(ref['schematic']) &amp;&amp; (File.mtime(ref['netlist']) &lt; File.mtime(ref['schematic']))
+      raise "netlist file '#{ref['netlist']}' is outdated!\nPlease update netlist and run get_reference again!"
+    end
+    if File.exist?(reference) &amp;&amp; (File.mtime(reference) &lt; File.mtime(ref['netlist']))
+      raise "Please run get_reference because netlist file '#{ref['netlist']}'is modified"
+    end
+  end
+end
+
 # -------------------------------------------------------------------
 # Netlist and compare
 
-# Netlist normalization
-#netlist.simplify
 netlist.purge
 # Hierarchy alignment (flatten out unmatched cells)
 
-#schematic.combine_devices
-#align
 target_netlist(output, write_spice, "Created by KLayout")
-if File.exist? "lvs_work/#{target}_rc_ext_settings.rb"
-  load "lvs_work/#{target}_rc_ext_settings.rb"
-  rc_ext_settings
-end
+
+if File.exist? reference
+  schematic reference
+  if File.exist? "#{lvs_work}/#{target}_rc_ext_settings.rb"
+    load "#{lvs_work}/#{target}_rc_ext_settings.rb"
+    rc_ext_settings
+  end
 # Netlist vs. netlist
-compare if File.exist? reference
-slink = "lvs_work/#{output}.txt"
-File.delete slink if File.exist?(slink)
-if /mswin32|mingw/ =~ RUBY_PLATFORM
-  system "WSL cd lvs_work; ln -s ../#{output}.txt"
-else
-  File.symlink "../#{output}", slink if (File.directory?('lvs_work') &amp;&amp; !File.symlink?(slink))
+  compare
+  slink = "#{lvs_work}/#{File.basename output}.txt"
+  File.delete slink if File.exist?(slink) || File.symlink?(slink)
+  if /mswin32|mingw/ =~ RUBY_PLATFORM
+    File.link output, slink
+  else
+    File.symlink "../#{File.basename output}", slink
+  end
 end
 </text>
 </klayout-macro>
