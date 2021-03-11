@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <klayout-macro>
- <description/>
+ <description>lvs_analog: mainly use for analog circuit</description>
  <version/>
  <category>lvs</category>
  <prolog/>
@@ -10,11 +10,11 @@
  <autorun-early>false</autorun-early>
  <shortcut/>
  <show-in-menu>true</show-in-menu>
- <group-name>lvs_scripts</group-name>
- <menu-path>tools_menu.lvs.end</menu-path>
+ <group-name>or1_lvsscripts</group-name>
+ <menu-path>tools_menu.lvs.my_group&gt;end("OpenRule1um_LVS").end</menu-path>
  <interpreter>dsl</interpreter>
  <dsl-interpreter-name>lvs-dsl-xml</dsl-interpreter-name>
- <text># OpenRule1um lvs rule for Analog v1.24 Sep. 6th, 2020 copy left by S. Moriyama (Anagix Corporation)
+ <text># OpenRule1um lvs rule for Analog v1.25 Mar. 11, 2021 modified by R. Okawa (okawa@ifdl.jp)
 # note for Capacitor extraction
 #   works only for Diffusion - Poly capacitance
 #   experimental PIP capacitor works if CAP layer is used for 2nd Poly layer (do not use with Diff cap)
@@ -131,9 +131,9 @@ extract_devices(mos4("NMOS"), { "SD" =&gt; nsd, "G" =&gt; lv_ngate, "W" =&gt; bu
 # Define connectivity for netlist extraction
 
 # Inter-layer
-connect(psd,     cnt)
-connect(nsd,     cnt)
-# connect(pol,    cnt)
+connect(psd, cnt)
+connect(nsd, cnt)
+# connect(pol, cnt)
 connect(pol_not_res, cnt)
 connect(hpol_not_res, cnt)
 connect(pol_overlapping_cap, cnt)
@@ -142,11 +142,11 @@ connect(cap, cnt)
 connect(pplus, cnt)
 
 connect(cnt, ntie)
-connect(nwl,   ntie)
+connect(nwl, ntie)
 connect(cnt, ptie)
 connect(cnt, ml1)
-connect(ml1,  via1)
-connect(via1,     ml2)
+connect(ml1, via1)
+connect(via1, ml2)
 connect(ml2, via2)
 connect(via2, ml3)
 
@@ -194,6 +194,7 @@ end
 netlist.purge
 # Hierarchy alignment (flatten out unmatched cells)
 
+File.open(File.basename(output), 'w:UTF-8'){ |f| f.puts ''}  # Make empty file : this code need to before "target_netlist()"
 target_netlist(output, write_spice, "Created by KLayout")
 
 if File.exist? reference

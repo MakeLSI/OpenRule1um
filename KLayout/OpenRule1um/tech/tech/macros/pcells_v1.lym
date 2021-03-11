@@ -10,8 +10,8 @@
  <autorun-early>false</autorun-early>
  <shortcut/>
  <show-in-menu>false</show-in-menu>
- <group-name/>
- <menu-path/>
+ <group-name>or1_macros</group-name>
+ <menu-path>macros_menu.my_group&gt;end("OpenRule1um_Macros").end</menu-path>
  <interpreter>ruby</interpreter>
  <dsl-interpreter-name/>
  <text> # OpenRule1um PCells v1.92 Feb. 18th, 2020 copy left by S. Moriyama (Anagix Corporation)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <klayout-macro>
- <description/>
+ <description>autoplace: initial placement from reference netlist</description>
  <version/>
  <category/>
  <prolog/>
@@ -10,8 +10,8 @@
  <autorun-early>false</autorun-early>
  <shortcut/>
  <show-in-menu>true</show-in-menu>
- <group-name/>
- <menu-path/>
+ <group-name>or1_macros</group-name>
+ <menu-path>macros_menu.my_group&gt;end("OpenRule1um_Macros").end</menu-path>
  <interpreter>ruby</interpreter>
  <dsl-interpreter-name/>
  <text>include RBA

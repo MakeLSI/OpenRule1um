@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <klayout-macro>
- <description>get_reference: create 'reference.cir' from LTspice netlist and set same_circuits definitions</description>
+ <description>get_reference: prepare reference netlist and settings file for LVS</description>
  <version/>
  <category/>
  <prolog/>
@@ -10,8 +10,8 @@
  <autorun-early>false</autorun-early>
  <shortcut/>
  <show-in-menu>true</show-in-menu>
- <group-name/>
- <menu-path/>
+ <group-name>or1_macros</group-name>
+ <menu-path>macros_menu.my_group&gt;end("OpenRule1um_Macros").end</menu-path>
  <interpreter>ruby</interpreter>
  <dsl-interpreter-name/>
  <text># OpenRule1um lvs preprocessor v1.8 Feb. 25, 2021 copy left by R. Okawa (okawa@ifdl.jp)
@@ -64,7 +64,7 @@ module MyMacro
   cell = cv.cell
   
   # Choose reference netlist and setting the some files
-  #open_dir = 'You can write the path here'  # you can write the path and uncomment out if you want to open the same directory always
+  open_dir = ''  # you can write the path and uncomment out if you want to open the same directory always
   ### Tips : Open the window with the current directory (the directory of existing layout file) if you wirtten -&gt; open_dir = ''
   ###         After the next time, opening with the path of the last opened directory every time.
   if defined? open_dir

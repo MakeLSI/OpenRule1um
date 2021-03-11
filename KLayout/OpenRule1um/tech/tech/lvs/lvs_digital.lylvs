@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <klayout-macro>
- <description>lvs: for MOS transistors only (OpenRule1um std cells supported)</description>
+ <description>lvs_digital: mainly use for digital circuit</description>
  <version/>
  <category>lvs</category>
  <prolog/>
@@ -10,8 +10,8 @@
  <autorun-early>false</autorun-early>
  <shortcut/>
  <show-in-menu>true</show-in-menu>
- <group-name>lvs_scripts</group-name>
- <menu-path>tools_menu.lvs.end</menu-path>
+ <group-name>or1_lvsscripts</group-name>
+ <menu-path>tools_menu.lvs.my_group&gt;end("OpenRule1um_LVS").end</menu-path>
  <interpreter>dsl</interpreter>
  <dsl-interpreter-name>lvs-dsl-xml</dsl-interpreter-name>
  <text># OpenRule1um lvs rule v1.22 Feb. 26, 2021 modified by R. Okawa (okawa@ifdl.jp)
