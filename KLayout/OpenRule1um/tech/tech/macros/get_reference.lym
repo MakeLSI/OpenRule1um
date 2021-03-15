@@ -191,10 +191,10 @@ module MyMacro
   # Generate setting file for LVS
   # File.mkdir 'lvs_work' unless File.directory? 'lvs_work'   ###### ToDo :  this code already done in L70
   ['macros', 'pymacros', 'python', 'ruby', 'drc'].each{ |f| FileUtils.rm_rf f if File.directory? f}
-  unless File.exist? "lvs_work/#{target}_lvs_settings.rb"
-    File.open("lvs_work/#{target}_lvs_settings.rb", 'w'){ |f|
+  unless File.exist? "lvs_work/#{target}_lvs_digital_settings.rb"
+    File.open("lvs_work/#{target}_lvs_digital_settings.rb", 'w'){ |f|
       
-      f.puts 'def lvs_settings'
+      f.puts 'def lvs_digital_settings'
       f.puts "  same_circuits '#{cell.name}', '#{circuit_top ? circuit_top.upcase : '.TOP'}'"
       if cells.size &gt; 0
         or1_cells = %[an21 an31 an41 buf1 buf2 buf4 buf8 cinv clkbuf1 clkbuf2 clkinv1 clkinv2 dff1 exnr exor
@@ -215,9 +215,9 @@ module MyMacro
     }
   end
   
-  unless File.exist? "lvs_work/#{target}_rc_ext_settings.rb"
-    File.open("lvs_work/#{target}_rc_ext_settings.rb", 'w'){ |f|
-      f.puts 'def rc_ext_settings'
+  unless File.exist? "lvs_work/#{target}_lvs_analog_settings.rb"
+    File.open("lvs_work/#{target}_lvs_analog_settings.rb", 'w'){ |f|
+      f.puts 'def lvs_analog_settings'
       f.puts "  same_circuits '#{cell.name}', '#{circuit_top ? circuit_top.upcase : '.TOP'}'"
       f.puts "  align"
       device_class.each_pair{ |p, q|

@@ -151,9 +151,9 @@ if File.exist? reference
   schematic(reference)
   
   # Load and execute LVS setting
-  if File.exist? "#{lvs_work}/#{target}_lvs_settings.rb"
-    load "#{lvs_work}/#{target}_lvs_settings.rb"
-    lvs_settings
+  if File.exist? "#{lvs_work}/#{target}_lvs_digital_settings.rb"
+    load "#{lvs_work}/#{target}_lvs_digital_settings.rb"
+    lvs_digital_settings
   end
   
   # Hierarchy alignment (flatten out unmatched cells)

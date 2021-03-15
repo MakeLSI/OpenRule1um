@@ -199,9 +199,9 @@ target_netlist(output, write_spice, "Created by KLayout")
 
 if File.exist? reference
   schematic reference
-  if File.exist? "#{lvs_work}/#{target}_rc_ext_settings.rb"
-    load "#{lvs_work}/#{target}_rc_ext_settings.rb"
-    rc_ext_settings
+  if File.exist? "#{lvs_work}/#{target}_lvs_analog_settings.rb"
+    load "#{lvs_work}/#{target}_lvs_analog_settings.rb"
+    lvs_analog_settings
   end
 # Netlist vs. netlist
   compare
