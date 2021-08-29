@@ -171,7 +171,7 @@
     
     def produce_impl # NMOS
       produce_impl_core {|indices, x1, y1, x2, y2, vs, u1, gl|
-        # create pcont
+        # create ncont
         insert_cell indices[:pcont], x1+vs/2, y2-vs/2
         insert_cell indices[:via], x1+vs/2, y2-vs/2
         create_path2 indices[:pol], x1+vs/2, y2-vs/2, x1+vs+u1/2, y2-vs/2, x1+vs+u1/2, y2-vs,u1, 0, 0
@@ -209,14 +209,14 @@
         }
         # psubcont and via
         if n % 2 == 0
-          y = y2-vs/2
+          y = y2 - vs/2 + u1/2
         else
-          y = y1+vs/2
+          y = y1 + vs/2 - u1/2
         end
-        x = offset -vs/2-gl+u1/2
+        x = offset - vs/2 - gl + u1/2
         insert_cell indices[:psubcont], x, y
         d = vs/2 + u1/2
-        insert_cell indices[:via], offset-vs/2-gl+u1/2, y 
+        insert_cell indices[:via], x, y
         create_box indices[:narea], x1-u1, y1+vs+u1/2, offset-gl+u1, y2-vs-u1/2
       }
     end
@@ -282,7 +282,7 @@
         else
           y = y2 - vs/2 + u1/2
         end
-        x = offset - vs/2 -gl + u1
+        x = offset - vs/2 - gl + u1
         insert_cell indices[:nsubcont], x, y
         insert_cell indices[:via], x, y
         
