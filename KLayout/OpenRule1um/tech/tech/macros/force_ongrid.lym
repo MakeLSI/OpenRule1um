@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text># force_ongrid v0.2 by S. Moriyama Sep. 3, 2021
+
+include RBA
+def fix_offgrid(shape, old_x, old_y)
+  p = fixed_point old_x, old_y
+  shape.transform Trans.new(Trans::R0, p.x-old_x, p.y-old_y) if p
+end
+
+def fixed_point old_x, old_y
+  x = (old_x/500).to_i * 500
+  y = (old_y/500).to_i * 500
+  unless x == old_x &amp;&amp; y == old_y
+    puts "(#{old_x}, #{old_y}) =&gt; (#{x}, #{y})"
+    return Point::new(x, y)
+  end
+  nil
+end
+
+def fix_path_points shape
+  spine = []
+  flag = false
+  shape.each_point{|p|
+    if new_p = fixed_point(p.x, p.y)
+      flag = true
+      spine &lt;&lt; new_p
+    else
+      spine &lt;&lt; p
+    end
+  }
+  flag &amp;&amp; spine
+end
+
+module MyMacro
+ 
+  include RBA
+  
+  app = Application.instance
+  mw = app.main_window
+  unless lv = mw.current_view
+    raise "Shape Statistics: No view selected"
+  end
+  cell = lv.active_cellview.cell
+
+  lv.each_layer{|layer_props|
+    paths = 0
+    cell.shapes(layer_props.layer_index).each{|shape|
+       # fix_offgrid(shape, shape.bbox.left, shape.bbox.top)
+       if shape.is_path?
+         path = shape.path
+         if spine = fix_path_points(shape)
+           path.points= spine
+           shape.path = path
+         end
+         paths = paths + 1
+       elsif shape.is_box?
+         box = shape.box
+         flag = false
+         if p = fixed_point(box.left, box.top)
+           box.top = p.y
+           box.left = p.x
+           flag = true
+         end
+         if p = fixed_point(box.right, box.bottom)
+           box.bottom = p.y
+           box.right = p.x
+           flag = true
+         end
+         shape.box = box if flag
+       elsif shape.is_polygon?
+         puts "Caution: fix off grid for polygon is not implemented yet"
+       end
+    }
+    puts "paths=#{paths} for layer:#{layer_props.name}" if paths&gt;0
+  }
+  
+ cell.each_inst{|inst|
+    old_x=inst.trans.disp.x
+    old_y=inst.trans.disp.y
+    fix_offgrid(inst, old_x, old_y)
+  }
+end
+
+</text>
+</klayout-macro>
