@@ -14,7 +14,7 @@
  <menu-path>macros_menu.my_group&gt;end("OpenRule1um_Macros").end</menu-path>
  <interpreter>ruby</interpreter>
  <dsl-interpreter-name/>
- <text> # OpenRule1um PCells  v1.94 Aug. 29, 2021 copy left by S. Moriyama (Anagix Corporation)
+ <text> # OpenRule1um PCells  v1.95 Sep. 15, 2021 copy left by S. Moriyama (Anagix Corporation)
  # note for experimental PIP capacitor: works if CAP layer is used for 2nd Poly layer (do not use with Diff cap)
  module OpenRule1um
 
@@ -208,12 +208,13 @@
           offset = offset + vs + gl
         }
         # psubcont and via
+        x = offset - vs/2 - gl # + u1/2        
         if n % 2 == 0
           y = y2 - vs/2 + u1/2
+          x = x + u1/2
         else
           y = y1 + vs/2 - u1/2
         end
-        x = offset - vs/2 - gl # + u1/2
         insert_cell indices[:psubcont], x, y
         d = vs/2 + u1/2
         insert_cell indices[:via], x, y
