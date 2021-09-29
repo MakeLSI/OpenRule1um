@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>drc: design rule check</description>
+ <version/>
+ <category>drc</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name>or1_drcscripts</group-name>
+ <menu-path>tools_menu.drc.my_group&gt;end("OpenRule1um_DRC").end</menu-path>
+ <interpreter>dsl</interpreter>
+ <dsl-interpreter-name>drc-dsl-xml</dsl-interpreter-name>
+ <text>## 1um Standard Rule DRC
+# klayout drc rule v0.4: 2019/10/08: seijiro.moriyama@anagix.com
+## ver1.00 : 2018/2/10:  akita11 akita@ifdl.jp
+## ver1.01 : 2018/2/23:  akita11 akita@ifdl.jp (bug fix)
+## ver1.10 : 2018/3/17:  akita11 akita@ifdl.jp (add rules based on rule v110)
+## ver1.20 : 2018/4/13:  akita11 akita@ifdl.jp (add rules based on rule v120)
+## ver1.30 : 2018/11/27: akita11 akita@ifdl.jp (add rules based for HPOL)
+## ver1.31 : 2018/11/28: akita11 akita@ifdl.jp (modified HPOL gap rule)
+## ver1.50 : 2021/09/27: akita11 akita@ifdl.jp (widemetal, gate-extension, NWL space)
+## ver1.51 : 2021/09/30: akita11 akita@ifdl.jp (nom-MOS POL touching DIFF)
+
+report("Output database")
+
+nwl = input(1, 0)
+nwl_dp = input(2, 0)
+diff = input(3, 0) 
+pol = input(5, 0)
+hpol = input(6,0)
+cnt = input(7, 0)
+ml1 = input(8, 0)
+via1 = input(9, 0) 
+ml2 = input(10, 0)
+via2 = input(11, 0)
+ml3 = input(12, 0)
+text = input(13, 0)
+frame = input(14, 0)
+res = input(15, 0)
+cap = input(16, 0)
+dio = input(17, 0)
+parea = input(18, 0)
+narea = input(19, 0)
+pad = input(20, 0)
+dm_dcn = input(101, 0)
+dm_pcn = input(102, 0)
+dm_nscn = input(103, 0)
+dm_pscn = input(104, 0)
+dm_via1 = input(105, 0)
+dm_via2 = input(106, 0)
+
+ndiff = diff &amp; narea
+pdiff = diff &amp; parea
+nmos = ndiff &amp; pol
+pmos = pdiff &amp; pol
+mos = nmos | pmos
+hipol = hpol &amp; pol
+
+#puts 'Check GAP'
+nwl.space(5.um).output("NWL space &lt; 5.0")
+parea.space(0.5.um).output("Parea space &lt; 0.5")
+narea.space(0.5.um).output("Narea space &lt; 0.5")
+parea.separation(narea.not_interacting(parea), 0.5.um).output("Parea-Narea space &lt; 0.5")
+diff.space(1.5.um).output("DIFF space &lt; 1.5")
+nwl.separation(ndiff.not_interacting(nwl), 3.um).output("NWL-Ndiff space &lt; 3.0")
+pdiff.separation(dm_nscn.not_interacting(pdiff), 0.5.um).output("Pdiff-NScont space &lt; 0.5")
+ndiff.separation(dm_pscn.not_interacting(ndiff), 1.0.um).output("Ndiff-PScont space &lt; 1.0")
+pol.space(1.0.um).output("POL space &lt; 1.0")
+mos.space(1.um).output(" POL(MOS) space &lt; 1.0")
+pol.separation(diff.not_interacting(pol), 0.5.um).output("POL-diff space &lt; 0.5")
+diff.separation(dm_dcn.not_interacting(diff), 1.um).output("Diff-dcont space &lt; 1.0")
+mos.separation(dm_dcn.not_interacting(mos), 0.5.um).output("MOS-dcont space &lt; 0.5")
+diff.separation(dm_pcn.not_interacting(diff), 1.0.um).output("Diff-pcont space &lt; 1.5")
+pol.separation(dm_pcn.not_interacting(pol), 0.5.um).output("POL-pcont space &lt; 0.5, may be pseudo-error (can be ignored)")
+ml1.space(1.um).output("ML1 space &lt; 1.0")
+ml2.space(1.um).output("ML2 space &lt; 1.0")
+ml3.space(1.um).output("ML3 space &lt; 1.0")
+ml1.separation(dm_dcn.not_interacting(ml1), 0.5.um).output("ML1-dcont space &lt; 0.5, may be pseudo-error (can be ignored)")
+ml1.separation(dm_pcn.not_interacting(ml1), 0.5.um).output("ML1-pcont space &lt; 0.5, may be pseudo-error (can be ignored)")
+dm_via1.space(0.5.um).output("via1 space &lt; 0.5")
+dm_via2.space(0.5.um).output("via2 space &lt; 0.5")
+ml1.separation(dm_via1.not_interacting(ml1), 0.5.um).output("ML1-via1 space &lt; 0.5")
+ml2.separation(dm_via1.not_interacting(ml2), 0.5.um).output("ML2-via1 space &lt; 0.5")
+ml2.separation(dm_via2.not_interacting(ml2), 0.5.um).output("ML2-via2 space &lt; 0.5")
+ml3.separation(dm_via2.not_interacting(ml3), 0.5.um).output("ML3-via2 space &lt; 0.5")
+dm_via1.separation(dm_dcn.not_interacting(dm_via1), 0.5.um).output("via1-dcont space &lt; 0.5")
+dm_via1.separation(dm_pcn.not_interacting(dm_via1), 0.5.um).output("via1-pcont space &lt; 0.5")
+dm_via1.separation(dm_nscn.not_interacting(dm_via1), 0.5.um).output("via1-nscont space &lt; 0.5")
+dm_via1.separation(dm_pscn.not_interacting(dm_via1), 0.5.um).output("via1-pscont space &lt; 0.5")
+dm_via1.separation(dm_via2.not_interacting(dm_via1), 0.5.um).output("via1-via2 space &lt; 0.5")
+dm_dcn.space(1.0.um).output("dcont space &lt; 1.0")
+hipol.space(2.0.um).output("Poly in HPOL space &lt; 2.0")
+pol.separation(hipol.not_interacting(pol), 1.0.um).output("Poly outside HPOL space &lt; 1.0")
+hpol.separation(mos, 3.0.um).output("HPOL MOS gate space &lt; 3.0")
+
+#puts 'Check Overlap'
+dm_nscn.raw.merged(2).output("nsubcont overlap")
+dm_dcn_mos = dm_dcn &amp; mos
+dm_dcn_mos.output("dcn-MOS overlap")
+
+#puts 'Check Stacked Con/Via'
+dm_pcn.and(dm_via1).not_in(dm_via1).output("pcont-via1 non-stack")
+dm_dcn.and(dm_via1).not_in(dm_via1).output("dcont-via1 non-stack")
+dm_via1.and(dm_via2).not_in(dm_via2).output("via1-via2 non-stack")
+
+#puts 'Check Width'
+nwl.width(4.um).output("NWL width &lt; 4.0")
+nwl_dp.width(4.um).output("NWL(diff.pot) width &lt; 4.0")
+parea.width(0.5.um).output("Parea width &lt; 0.5")
+narea.width(0.5.um).output("Narea width &lt; 0.5")
+diff.width(1.0.um).output("DIFF width &lt; 1.0")
+pol.width(1.um).output("POL width &lt; 1.0")
+ml1.width(1.um).output("ML1 width &lt; 1.0")
+ml2.width(1.um).output("ML2 width &lt; 1.0")
+ml3.width(1.um).output("ML3 width &lt; 1.0")
+hipol.width(2.0.um).output("Poly in HPOL width &lt; 2.0")
+
+### HIPOL length (22-82um)
+polh = (pol.inside(hpol)) - dm_pcn
+polh_e = polh.edges
+polh_e_all = polh_e.with_length(2.1.um, 10000.um)
+polh_e_ok = polh_e.with_length(22.um, 82.um)
+(polh_e_all - polh_e_ok).output("POL in HPOL must be 22um - 82um")
+
+#puts 'Check Enclose'
+nwl.enclosing(pdiff, 2.um).output("Pdiff enclosure in NWL &lt; 2.0")
+dm_nscn.not_inside(nwl).output("nsubcon outside NWL")
+parea.enclosing(diff, 0.5.um).output("DIFF enclosure in Parea &lt; 0.5")
+narea.enclosing(diff, 0.5.um).output("DIFF enclosure in Narea &lt; 0.5")
+hpol.enclosing(hipol, 5.0.um).output("POL enclosure in HPOL &lt; 5.0")
+
+#puts 'Check MOS gate extension'
+pol.enclosing(diff, 1.um).output("POL gate extension &lt; 1.0")
+
+#puts 'Check stand-alone Cont/Via'
+dmcnt1 = dm_dcn | dm_pcn
+dmcnt2 = dmcnt1 | dm_nscn
+dmcnt = dmcnt2 | dm_pscn
+cnt.outside(dmcnt).output("Stand alone Cont")
+via1.outside(dm_via1).output("Stand alone VIA1")
+via2.outside(dm_via2).output("Stand alone VIA2")
+
+#puts 'Check wide metal'
+ml1w = ml1.sized(-7.4).sized(7.4)
+dm_dcn_in_widemetal = dm_dcn.and(ml1w.interacting(dm_dcn))
+ml1.enclosing(dm_dcn_in_widemetal, 0.5.um).output("DM_dcont encosure is less than 0.5 for wide M1 (&gt;15um)")
+
+dm_pcn_in_widemetal = dm_pcn.and(ml1w.interacting(dm_pcn))
+ml1.enclosing(dm_pcn_in_widemetal, 0.5.um).output("DM_pcont encosure is less than 0.5 for wide M1 (&gt;15um)")
+
+dm_via1_in_widemetal = dm_via1.and(ml1w.interacting(dm_via1))
+ml1.enclosing(dm_via1_in_widemetal, 0.5.um).output("DM_Via1 encosure is less than 0.5 for wide M1 (&gt;15um)")
+
+ml2w = ml2.sized(-7.4).sized(7.4)
+dm_via1_in_widemetal = dm_via1.and(ml2w.interacting(dm_via1))
+ml2.enclosing(dm_via1_in_widemetal, 0.5.um).output("DM_Via1 encosure is less than 0.5 for wide M2 (&gt;15um)")
+
+dm_via2_in_widemetal = dm_via2.and(ml2w.interacting(dm_via2))
+ml2.enclosing(dm_via2_in_widemetal, 0.5.um).output("DM_Via2 encosure is less than 0.5 for wide M2 (&gt;15um)")
+
+ml3w = ml2.sized(-7.4).sized(7.4)
+dm_via3_in_widemetal = dm_via2.and(ml3w.interacting(dm_via2))
+ml3.enclosing(dm_via2_in_widemetal, 0.5.um).output("DM_Via2 encosure is less than 0.5 for wide M3 (&gt;15um)")
+
+# Checking non-MOS POL touching DIFF (DM_dcon)
+pol_diff_edge = (dm_dcn.raw.edges &amp; pol.edges)
+pol_mos_edge  = (dm_dcn.raw.edges &amp; mos.edges)
+(pol_diff_edge - pol_mos_edge).output("DM_dcont touches non-MOS Poly")
+
+</text>
+</klayout-macro>
