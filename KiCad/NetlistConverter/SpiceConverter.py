@@ -1,7 +1,8 @@
-# Netlist converter  v0.1  23 Sep., 2021 copy left by R. Okawa (okawa@ifdl.jp)
+# Netlist converter  v0.2  5 Feb., 2022 copy left by R. Okawa (okawa@ifdl.jp)
 # Note: Supports hierarchical SPICE netlist
+import os
 import sys
-import codecs  # available for python 2/3
+import codecs  # available for python 2 or 3
 import xml.etree.ElementTree as ET
 
 
@@ -9,12 +10,14 @@ import xml.etree.ElementTree as ET
 ### get arguments from command line
 args = sys.argv
 
-### get path of the intermediate netlist file (XML)
+### get path of the intermediate netlist file (XML format)
 ### Note: included '\' in the path on Windows KiCad 5.1.10
 imd_file_path = repr(args[1]).replace('\\\\', '/').replace('\'', '')
 
 ### get path of output file
-out_file_path = args[2]
+### Note: Multiple extension to single extension
+out_file_path_tmp = args[2]
+out_file_path = out_file_path_tmp.split('.')[0] + '.cir'
 
 ### parse xml file
 tree = ET.parse(imd_file_path)
@@ -89,7 +92,7 @@ for subckt in subckts:
             
             subckt_source.append(sheet_source)
 
-    ### write net number of IO of subckt       
+    ### write net number of IO of subckt
     for subckt_net in subckt_nets:
         out_file.write(' ' + subckt_net)
 
@@ -188,3 +191,6 @@ for subckt in subckts:
     out_file.write('.ends ' + subckt.replace('.sch', '') + '\n')
 
 out_file.close
+
+# delete the intermediate netlist file
+# os.remove(imd_file_path)
