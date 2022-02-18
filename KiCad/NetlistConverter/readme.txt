@@ -1,6 +1,6 @@
 ネットリストコンバータ：SpiceConverter.py
 
-Usage:
+Usage [KiCad (5.1.10)-1 時点]:
 1．適当なフォルダにSpiceConverter.pyを置きます。
 2．KiCad Eeschemaで"ツール"→"ネットリスト ファイルを生成"をクリックしてネットリストの出力のウィンドウを開きます。
 3．"プラグインを追加"をクリックして、"プラグインを参照"から先ほどのSpiceConverter.pyを選択します。
