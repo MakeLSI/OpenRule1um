@@ -1,4 +1,4 @@
-# Netlist converter  v0.2  5 Feb., 2022 copy left by R. Okawa (okawa@ifdl.jp)
+# Netlist converter  v0.3  17 Feb., 2022 copy left by R. Okawa (okawa@ifdl.jp)
 # Note: Supports hierarchical SPICE netlist
 import os
 import sys
@@ -31,7 +31,9 @@ sources = root.findall('design/sheet/title_block/source')
 source_text = [child.text for child in sources]
 subckts = set([item for item in source_text])
 
-out_file.write('* KiCad Eeschema')
+### write header of netlist
+tool_ver = root.find('design/tool').text
+out_file.write('* KiCad ' + tool_ver)
 
 
 
@@ -40,7 +42,7 @@ for subckt in subckts:
     out_file.write('\n')
 
     ### write subckt name
-    out_file.write('.subckt ' + subckt.replace('.sch', ''))
+    out_file.write('.subckt ' + subckt.split('.')[0])
 
     ### parse subckt I/O pin
     subckt_nets = []
@@ -184,11 +186,11 @@ for subckt in subckts:
                         for subckt_net in x_nets:
                             out_file.write(' ' + subckt_net)
                         
-                        out_file.write(' ' + sheet1_source.replace('.sch', '') + '\n')
+                        out_file.write(' ' + sheet1_source.split('.')[0] + '\n')
                         
                         x_number += 1
     
-    out_file.write('.ends ' + subckt.replace('.sch', '') + '\n')
+    out_file.write('.ends ' + subckt.split('.')[0] + '\n')
 
 out_file.close
 
