@@ -1,4 +1,4 @@
-# Netlist converter  v0.3  17 Feb., 2022 copy left by R. Okawa (okawa@ifdl.jp)
+# Netlist converter  v0.4  2 Mar., 2022 copy left by R. Okawa (okawa@ifdl.jp)
 # Note: Supports hierarchical SPICE netlist
 import os
 import sys
@@ -27,9 +27,14 @@ root = tree.getroot()
 out_file = codecs.open(out_file_path, 'w', 'utf-8')
 
 ### get schematic(s)
-sources = root.findall('design/sheet/title_block/source')
-source_text = [child.text for child in sources]
-subckts = set([item for item in source_text])
+subckts_dic = {}
+sheets = root.findall('design/sheet')
+for sheet in sheets:
+    if sheet.find('title_block/source').text not in subckts_dic:
+        subckts_dic[sheet.find('title_block/source').text] = sheet.attrib['name']
+
+### for detecting error by check number of IOs each subckt has
+num_io = {}
 
 ### write header of netlist
 tool_ver = root.find('design/tool').text
@@ -38,6 +43,7 @@ out_file.write('* KiCad ' + tool_ver)
 
 
 ### each schematic
+subckts = subckts_dic.keys()
 for subckt in subckts:
     out_file.write('\n')
 
@@ -84,9 +90,11 @@ for subckt in subckts:
                                             and net.attrib['name'].startswith('/') \
                                             and net.attrib['code'] not in subckt_nets \
                                             and '/Net' not in net.attrib['name'] \
+                                            and net.attrib['name'].count('/') <= sheet_name.count('/') \
                                         or True \
                                             and '/' not in net.attrib['name'] \
                                             and not(net.attrib['name'].startswith('Net'))  \
+                                            and not(net.attrib['name'].startswith('unconnected'))  \
                                             and net.attrib['code'] not in subckt_nets \
                                         :
                                         subckt_nets.append(net.attrib['code'])
@@ -147,48 +155,64 @@ for subckt in subckts:
 
     ### parse and write subcircuit instance in subckt
     x_number = 1  # subcircuit instance id
-    sheets1 = root.findall('design/sheet')
-    for sheet1 in sheets1:
-        sheets2 = root.findall('design/sheet')
-        for sheet2 in sheets2:
-            sheet1_name = sheet1.attrib['name']
-            sheet2_name = sheet2.attrib['name']
-            if sheet1_name != sheet2_name and sheet1_name != '/':
-                if sheet1_name.startswith(sheet2_name):
-                    sheet1_source = sheet1.find('title_block/source').text
-                    if sheet1_source != subckt:
-                        out_file.write('X' + str(x_number))
-                        x_nets = []  # subcircuit instance nets
-                        comps = root.findall('components/comp')
-                        for comp in comps:
-                            comp_ref = comp.attrib['ref']
-                            comp_sheetpath = comp.find('sheetpath')
-                            comp_sheetpath_name = comp_sheetpath.attrib['names']
-                            if sheet1_name == comp_sheetpath_name:
-                                libsource = comp.find('libsource')
-                                libsource_part = libsource.attrib['part']
-                                libpart = root.find("libparts/libpart[@part='" + str(libsource_part) + "']")
-                                pins = libpart.findall('pins/pin')
-                                for pin in pins:
-                                    pin_num = pin.attrib['num']
-                                    nets = root.findall('nets/net')
-                                    for net in nets:
-                                        nodes = net.findall('node')
-                                        if net.attrib['code'] not in x_nets:
-                                            for node in nodes:
-                                                if node.attrib['ref'] == comp_ref and node.attrib['pin'] == pin_num:
-                                                    ### condition of the below
-                                                    ### ignore net name such as 'xxx/xxx/Netxxx' or '/Netxxx'
-                                                    if '/Net' not in net.attrib['name']:
-                                                        x_nets.append(net.attrib['code'])
-                                                        break
-                                    
-                        for subckt_net in x_nets:
-                            out_file.write(' ' + subckt_net)
-                        
-                        out_file.write(' ' + sheet1_source.split('.')[0] + '\n')
-                        
-                        x_number += 1
+    sheets = root.findall('design/sheet')
+    for sheet in sheets:
+        sheet_name = sheet.attrib['name']
+        if sheet_name.startswith(subckts_dic[subckt]) \
+           and \
+           subckts_dic[subckt].count('/') + 1 == sheet_name.count('/'):
+            out_file.write('X' + str(x_number))
+            x_nets = []  # subcircuit instance nets
+            comps = root.findall('components/comp')
+            for comp in comps:
+                comp_ref = comp.attrib['ref']
+                comp_sheetpath = comp.find('sheetpath')
+                comp_sheetpath_name = comp_sheetpath.attrib['names']
+                if sheet_name == comp_sheetpath_name \
+                    or \
+                   comp_sheetpath_name.startswith(sheet_name) \
+                       and \
+                   sheet_name.count('/') + 1 <= comp_sheetpath_name.count('/'):
+                    libsource = comp.find('libsource')
+                    libsource_part = libsource.attrib['part']
+                    libpart = root.find("libparts/libpart[@part='" + str(libsource_part) + "']")
+                    pins = libpart.findall('pins/pin')
+                    for pin in pins:
+                        pin_num = pin.attrib['num']
+                        nets = root.findall('nets/net')
+                        for net in nets:
+                            nodes = net.findall('node')
+                            if net.attrib['code'] not in x_nets:
+                                for node in nodes:
+                                    if node.attrib['ref'] == comp_ref and node.attrib['pin'] == pin_num:
+                                        ### condition of the below
+                                        ### ignore net name such as 'xxx/xxx/Netxxx' or '/Netxxx'
+                                        if 'Net' not in net.attrib['name'] and \
+                                           'unconnected' not in net.attrib['name'] and \
+                                           net.attrib['name'].count('/') <= sheet_name.count('/'):
+                                            x_nets.append(net.attrib['code'])
+                                            break
+
+            for subckt_net in x_nets:
+                out_file.write(' ' + subckt_net)
+            
+            sheet_source = sheet.find('title_block/source').text
+            out_file.write(' ' + sheet_source.split('.')[0] + '\n')
+            out_file.write('* ' + 'X' + str(x_number) + ' is ' + sheet_name + '\n')
+
+            ### parse IO error check
+            if sheet_source.split('.')[0] not in num_io:
+                num_io[sheet_source.split('.')[0]] = len(x_nets)
+            else:
+                if num_io[sheet_source.split('.')[0]] != len(x_nets):
+                    ### error when the number of IOs compares with the parsed same instance is different
+                    out_file.write('*### ^ ERROR: the IO(s) of this instance did not parse correctly ###\n')
+                    print('ERROR(' + subckt.split('.')[0] + '): please press any key & check output file')
+                    input()
+                    break
+            
+            
+            x_number += 1
     
     out_file.write('.ends ' + subckt.split('.')[0] + '\n')
 
