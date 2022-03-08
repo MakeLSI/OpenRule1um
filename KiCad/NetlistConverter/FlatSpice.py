@@ -1,4 +1,4 @@
-# Netlist converter  v0.1  8 Mar., 2022 copy left by R. Okawa (okawa@ifdl.jp)
+# Netlist converter  v0.2  8 Mar., 2022 copy left by R. Okawa (okawa@ifdl.jp)
 # Note: The circuit is extracted as a subckt.
 import os
 import sys
@@ -58,6 +58,8 @@ for comp in comps:
                 if node.attrib['ref'] == comp_ref and node.attrib['pin'] == pin_num:
                     if  net.attrib['name'].startswith('/') \
                     and net.attrib['name'].count('/') < 2 \
+                    and not(net.attrib['name'].startswith('Net'))\
+                    and not(net.attrib['name'].startswith('/Net'))\
                     and net.attrib['code'] not in subckt_nets:
                         subckt_nets.append(net.attrib['code'])
                         net_names.append([net.attrib['code'], net.attrib['name']])
@@ -98,7 +100,7 @@ for comp in comps:
     out_file.write(' ' + spice_model)
     out_file.write('\n')
 
-    out_file.write('* ' + node.attrib['ref'] + ' is in ' + comp_sheetpath_name + '\n')
+    out_file.write('* ' + comp_ref + ' is in ' + comp_sheetpath_name + '\n')
 
 out_file.write('.ends ' + sheet_source_top.split('.')[0] + '\n')
 out_file.close
