@@ -23,6 +23,7 @@
 ## ver1.30 : 2018/11/27: akita11 akita@ifdl.jp (add rules based for HPOL)
 ## ver1.31 : 2018/11/28: akita11 akita@ifdl.jp (modified HPOL gap rule)
 ## ver1.50 : 2021/09/27: akita11 akita@ifdl.jp (widemetal, gate-extension, NWL space)
+## ver1.51 : 2021/09/30: akita11 akita@ifdl.jp (nom-MOS POL touching DIFF)
 
 report("Output database")
 
@@ -59,7 +60,6 @@ pmos = pdiff &amp; pol
 mos = nmos | pmos
 hipol = hpol &amp; pol
 
-=begin
 #puts 'Check GAP'
 nwl.space(5.um).output("NWL space &lt; 5.0")
 parea.space(0.5.um).output("Parea space &lt; 0.5")
@@ -147,33 +147,29 @@ via2.outside(dm_via2).output("Stand alone VIA2")
 #puts 'Check wide metal'
 ml1w = ml1.sized(-7.4).sized(7.4)
 dm_dcn_in_widemetal = dm_dcn.and(ml1w.interacting(dm_dcn))
-ml1.enclosing(dm_dcn_in_widemetal, 0.5.um).output("DM_dcont encosure &lt; 0.5 for wide M1 (&gt;15um)")
+ml1.enclosing(dm_dcn_in_widemetal, 0.5.um).output("DM_dcont encosure is less than 0.5 for wide M1 (&gt;15um)")
 
 dm_pcn_in_widemetal = dm_pcn.and(ml1w.interacting(dm_pcn))
-ml1.enclosing(dm_pcn_in_widemetal, 0.5.um).output("DM_pcont encosure &lt; 0.5 for wide M1 (&gt;15um)")
+ml1.enclosing(dm_pcn_in_widemetal, 0.5.um).output("DM_pcont encosure is less than 0.5 for wide M1 (&gt;15um)")
 
 dm_via1_in_widemetal = dm_via1.and(ml1w.interacting(dm_via1))
-ml1.enclosing(dm_via1_in_widemetal, 0.5.um).output("DM_Via1 encosure &lt; 0.5 for wide M1 (&gt;15um)")
+ml1.enclosing(dm_via1_in_widemetal, 0.5.um).output("DM_Via1 encosure is less than 0.5 for wide M1 (&gt;15um)")
 
 ml2w = ml2.sized(-7.4).sized(7.4)
 dm_via1_in_widemetal = dm_via1.and(ml2w.interacting(dm_via1))
-ml2.enclosing(dm_via1_in_widemetal, 0.5.um).output("DM_Via1 encosure &lt; 1.0 for wide M2 (&gt;15um)")
+ml2.enclosing(dm_via1_in_widemetal, 0.5.um).output("DM_Via1 encosure is less than 0.5 for wide M2 (&gt;15um)")
 
 dm_via2_in_widemetal = dm_via2.and(ml2w.interacting(dm_via2))
-ml2.enclosing(dm_via2_in_widemetal, 0.5.um).output("DM_Via2 encosure &lt; 0.5 for wide M2 (&gt;15um)")
+ml2.enclosing(dm_via2_in_widemetal, 0.5.um).output("DM_Via2 encosure is less than 0.5 for wide M2 (&gt;15um)")
 
 ml3w = ml2.sized(-7.4).sized(7.4)
 dm_via3_in_widemetal = dm_via2.and(ml3w.interacting(dm_via2))
-ml3.enclosing(dm_via2_in_widemetal, 0.5.um).output("DM_Via2 encosure &lt; 0.5 for wide M3 (&gt;15um)")
-=end
+ml3.enclosing(dm_via2_in_widemetal, 0.5.um).output("DM_Via2 encosure is less than 0.5 for wide M3 (&gt;15um)")
 
-#dm_dcn.raw.interacting(mos).output("hoge")
-#dm_dcn.raw.interacting(mos, 1, 1).output("hoge")
-#mos_e = mos.edges
-#mos_e.output("hoge")
-#dm_dcn.raw.intersections(mos_e)
-#.output("hoge")
-#dm_dcn.raw.interacting(mos).edges.raw.interacting(mos).output("hoge")
-dm_dcn.raw.separation(pol, 0.1).output("hoge")
+# Checking non-MOS POL touching DIFF (DM_dcon)
+pol_diff_edge = (dm_dcn.raw.edges &amp; pol.edges)
+pol_mos_edge  = (dm_dcn.raw.edges &amp; mos.edges)
+(pol_diff_edge - pol_mos_edge).output("DM_dcont touches non-MOS Poly")
+
 </text>
 </klayout-macro>
